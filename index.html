@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Il Tuo Nome — Computer Science Student & Developer</title>
+<title>Umberto Cimmino — Computer Science Student & Developer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -34,7 +34,6 @@
     overflow-x: hidden;
   }
 
-  /* ── NOISE TEXTURE OVERLAY ── */
   body::before {
     content: '';
     position: fixed;
@@ -54,21 +53,148 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.2rem 3rem;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(10,10,10,0.88);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
   }
 
-  .nav-logo {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-    text-decoration: none;
+  /* ── NAV COMMAND & LOGO ── */
+  .nav-cmd-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    padding: 0.2rem 0;
+    transition: border-color 0.2s;
   }
 
-  .nav-logo span { color: var(--muted); }
+  .nav-cmd-wrap:focus-within { 
+    border-bottom-color: rgba(200,241,53,0.5); 
+  }
 
+  .nav-cmd-prefix {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  #nav-cmd {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    min-width: 4px;
+    caret-color: var(--accent);
+  }
+
+  #nav-cmd::placeholder { color: var(--muted); opacity: 0.4; }
+
+  /* ── DROPDOWN ── */
+  .nav-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    width: 220px;
+    background: #0f0f0f;
+    border: 1px solid rgba(255,255,255,0.11);
+    border-radius: 7px;
+    overflow: hidden;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(-5px);
+    pointer-events: none;
+    transition: opacity 0.14s ease, transform 0.14s ease;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+  }
+
+  .nav-dropdown.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .dropdown-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.55rem 0.9rem 0.3rem;
+    opacity: 0.55;
+  }
+
+  .dd-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.52rem 0.9rem;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    gap: 0.8rem;
+  }
+
+  .dd-option:first-of-type { border-top: none; }
+
+  .dd-option:hover, .dd-option.active {
+    background: rgba(200,241,53,0.07);
+  }
+
+  .dd-option.active .dd-name { color: var(--accent); }
+
+  .dd-left { display: flex; align-items: center; gap: 0.35rem; }
+
+  .dd-slash {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.35;
+  }
+
+  .dd-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+    transition: color 0.1s;
+  }
+
+  .dd-desc {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .dd-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 3px;
+    padding: 1px 5px;
+    opacity: 0.55;
+    flex-shrink: 0;
+  }
+
+  .dd-nomatch {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    padding: 0.6rem 0.9rem;
+    opacity: 0.45;
+    font-style: italic;
+  }
+
+  /* ── NAV LINKS ── */
   .nav-links {
     display: flex;
     gap: 2rem;
@@ -97,9 +223,7 @@
     z-index: 1;
   }
 
-  .hero-inner {
-    max-width: 900px;
-  }
+  .hero-inner { max-width: 900px; }
 
   .hero-tag {
     font-family: var(--mono);
@@ -130,26 +254,19 @@
     margin-bottom: 1.5rem;
   }
 
-  h1 em {
-    font-style: normal;
-    color: var(--muted);
-  }
+  h1 em { font-style: normal; color: var(--muted); }
 
   .hero-desc {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     color: var(--muted);
     max-width: 560px;
     margin-bottom: 2.5rem;
     line-height: 1.8;
   }
 
-  .hero-desc strong { color: var(--text); font-weight: 600; }
+  .hero-desc strong { color: var(--text); font-weight: 600;}
 
-  .hero-cta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
 
   .btn {
     display: inline-flex;
@@ -167,16 +284,8 @@
     border: none;
   }
 
-  .btn-primary {
-    background: var(--accent);
-    color: #0a0a0a;
-    font-weight: 700;
-  }
-
-  .btn-primary:hover {
-    background: #d4f855;
-    transform: translateY(-1px);
-  }
+  .btn-primary { background: var(--accent); color: #0a0a0a; font-weight: 700; }
+  .btn-primary:hover { background: #d4f855; transform: translateY(-1px); }
 
   .btn-ghost {
     background: transparent;
@@ -184,10 +293,7 @@
     border: 1px solid var(--border);
   }
 
-  .btn-ghost:hover {
-    color: var(--text);
-    border-color: var(--border-hover);
-  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--border-hover); }
 
   /* ── STATUS BADGE ── */
   .status-badge {
@@ -205,8 +311,7 @@
   }
 
   .status-dot {
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--accent2);
     animation: pulse 2s ease-in-out infinite;
@@ -252,10 +357,7 @@
     max-width: 60px;
   }
 
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-  }
+  .container { max-width: 960px; margin: 0 auto; }
 
   /* ── ABOUT ── */
   #about .about-grid {
@@ -274,11 +376,7 @@
 
   .about-text p strong { color: var(--text); }
 
-  .about-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
+  .about-info { display: flex; flex-direction: column; gap: 0.5rem; }
 
   .info-row {
     display: flex;
@@ -329,10 +427,7 @@
     transition: border-color 0.2s, transform 0.2s;
   }
 
-  .skill-card:hover {
-    border-color: var(--border-hover);
-    transform: translateY(-2px);
-  }
+  .skill-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
 
   .skill-icon {
     font-family: var(--mono);
@@ -343,17 +438,9 @@
     opacity: 0.7;
   }
 
-  .skill-title {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.8rem;
-  }
+  .skill-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.8rem; }
 
-  .skill-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 
   .tag {
     font-family: var(--mono);
@@ -373,11 +460,7 @@
   }
 
   /* ── PROJECTS ── */
-  .projects-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+  .projects-list { display: flex; flex-direction: column; gap: 1rem; }
 
   .project-card {
     display: grid;
@@ -394,10 +477,7 @@
     cursor: pointer;
   }
 
-  .project-card:hover {
-    border-color: var(--border-hover);
-    background: var(--bg3);
-  }
+  .project-card:hover { border-color: var(--border-hover); background: var(--bg3); }
 
   .project-num {
     font-family: var(--mono);
@@ -406,16 +486,8 @@
     min-width: 28px;
   }
 
-  .project-info h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-  }
-
-  .project-info p {
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
+  .project-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .project-info p { font-size: 0.85rem; color: var(--muted); }
 
   .project-meta {
     display: flex;
@@ -437,12 +509,8 @@
     transition: transform 0.2s, color 0.2s;
   }
 
-  .project-card:hover .project-arrow {
-    transform: translateX(4px);
-    color: var(--text);
-  }
+  .project-card:hover .project-arrow { transform: translateX(4px); color: var(--text); }
 
-  /* WIP badge */
   .wip {
     font-family: var(--mono);
     font-size: 9px;
@@ -479,41 +547,7 @@
     margin-bottom: 1.5rem;
   }
 
-  .contact-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .contact-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.2rem;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text);
-    font-size: 0.9rem;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-
-  .contact-link:hover {
-    border-color: var(--border-hover);
-    transform: translateX(4px);
-  }
-
-  .contact-link-label {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 0.1rem;
-  }
-
-  /* ── TERMINAL BLOCK ── */
+  /* ── TERMINAL ── */
   .terminal {
     background: #0f0f0f;
     border: 1px solid var(--border);
@@ -533,7 +567,7 @@
   .t-dot { width: 10px; height: 10px; border-radius: 50%; }
 
   .terminal-body {
-    padding: 1.2rem 1.2rem;
+    padding: 1.2rem;
     font-family: var(--mono);
     font-size: 12px;
     line-height: 2;
@@ -543,6 +577,21 @@
   .t-cmd { color: var(--text); }
   .t-out { color: var(--muted); }
   .t-val { color: var(--accent2); }
+
+  /* GitHub link inside terminal */
+  .t-gh-link {
+    color: var(--accent2);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(74,222,128,0.35);
+    transition: border-color 0.2s, color 0.2s;
+    cursor: pointer;
+  }
+
+  .t-gh-link:hover {
+    color: #6ee7a0;
+    border-bottom-color: rgba(74,222,128,0.75);
+  }
+
   .t-cursor {
     display: inline-block;
     width: 8px;
@@ -576,21 +625,25 @@
     letter-spacing: 0.05em;
   }
 
-  /* ── FADE IN ANIMATION ── */
+  /* ── FADE IN ── */
   .fade-up {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
 
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
 
   /* ── RESPONSIVE ── */
+ /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
-    nav { padding: 1rem 1.5rem; }
+    nav { 
+      padding: 1rem 1.5rem; 
+      justify-content: center; /* Centra i link */
+    }
+    .nav-cmd-wrap { 
+      display: none; /* Nasconde il nav command */
+    }
     .nav-links { gap: 1.2rem; }
     #hero { padding: 6rem 1.5rem 3rem; }
     section { padding: 4rem 1.5rem; }
@@ -605,11 +658,58 @@
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <a href="#hero" class="nav-logo">
-    <span>~/</span>portfolio
-  </a>
+  <div class="nav-cmd-wrap" id="nav-cmd-wrap" title="Clicca per navigare">
+    <span class="nav-cmd-prefix">~/</span>
+    <input id="nav-cmd" value="portfolio" placeholder="cd /sezione..." autocomplete="off" spellcheck="false">
+
+    <div class="nav-dropdown" id="nav-dropdown">
+      <div class="dropdown-label" id="dd-label">sezioni disponibili</div>
+      <div id="dd-list">
+        <div class="dd-option" data-target="about" data-aliases="about,chi sono,info">
+          <div class="dd-left">
+            <span class="dd-slash">/</span>
+            <span class="dd-name">about</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="dd-desc">Chi sono</span>
+            <span class="dd-badge">↩</span>
+          </div>
+        </div>
+        <div class="dd-option" data-target="skills" data-aliases="skills,competenze,skill,linguaggi">
+          <div class="dd-left">
+            <span class="dd-slash">/</span>
+            <span class="dd-name">skills</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="dd-desc">Competenze</span>
+            <span class="dd-badge">↩</span>
+          </div>
+        </div>
+        <div class="dd-option" data-target="projects" data-aliases="projects,progetti,project,lavori">
+          <div class="dd-left">
+            <span class="dd-slash">/</span>
+            <span class="dd-name">projects</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="dd-desc">Progetti</span>
+            <span class="dd-badge">↩</span>
+          </div>
+        </div>
+        <div class="dd-option" data-target="contact" data-aliases="contact,contatti,contacts,email">
+          <div class="dd-left">
+            <span class="dd-slash">/</span>
+            <span class="dd-name">contact</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="dd-desc">Contatti</span>
+            <span class="dd-badge">↩</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <ul class="nav-links">
     <li><a href="#about">about</a></li>
     <li><a href="#skills">skills</a></li>
@@ -618,26 +718,20 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
     <div class="status-badge">
       <span class="status-dot"></span>
       Disponibile per collaborazioni &amp; stage
     </div>
-
     <div class="hero-tag">Computer Science Student · Anno II</div>
-
     <h1>
-      Il tuo<br>
-      <em>nome.</em>
+      Umberto<br>
+      <em>Cimmino.</em>
     </h1>
-
     <p class="hero-desc">
-      Studente universitario a <strong>Fisciano (UNISA)</strong>, diplomato perito informatico <strong>con lode</strong>.
       Appassionato di programmazione, progettazione web e <strong>graphic design</strong>.
     </p>
-
     <div class="hero-cta">
       <a href="#projects" class="btn btn-primary">Vedi i miei lavori →</a>
       <a href="#contact" class="btn btn-ghost">Contattami</a>
@@ -645,7 +739,6 @@
   </div>
 </section>
 
-<!-- ABOUT -->
 <section id="about">
   <div class="container">
     <div class="section-header">
@@ -653,23 +746,21 @@
       <h2>Chi sono</h2>
       <span class="section-line"></span>
     </div>
-
     <div class="about-grid">
       <div class="about-text fade-up">
         <p>
           Sono uno studente universitario iscritto al secondo anno di <strong>Computer Science</strong>
-          presso l'Università degli Studi di Salerno — Fisciano.
+          presso <u>l'Università degli Studi di Salerno — Fisciano</u>.
         </p>
         <p>
-          Ho conseguito il diploma da <strong>Perito Informatico</strong> con il massimo dei voti,
+          Ho conseguito il diploma da <strong>Perito Informatico</strong> presso <u>I.I.S Antonio Pacinotti</u> con il massimo dei voti,
           acquisendo una solida base in informatica, reti e sviluppo software.
         </p>
         <p>
-          Mi diletto nella creazione di <strong>grafiche digitali</strong> e sono appassionato di design.
+          Mi diletto nella creazione di <strong>piccoli progetti personali</strong> e sono appassionato di design.
           Credo che la tecnologia e l'estetica debbano andare di pari passo.
         </p>
       </div>
-
       <div class="about-info fade-up">
         <div class="info-row">
           <span class="info-label">Università</span>
@@ -688,7 +779,7 @@
         </div>
         <div class="info-row">
           <span class="info-label">Luogo</span>
-          <span class="info-value">Campania, Italia</span>
+          <span class="info-value">Salerno, Campania, Italia</span>
         </div>
         <div class="info-row">
           <span class="info-label">Interessi</span>
@@ -699,7 +790,6 @@
   </div>
 </section>
 
-<!-- SKILLS -->
 <section id="skills">
   <div class="container">
     <div class="section-header">
@@ -707,7 +797,6 @@
       <h2>Competenze</h2>
       <span class="section-line"></span>
     </div>
-
     <div class="skills-grid">
 
       <div class="skill-card fade-up">
@@ -740,9 +829,8 @@
         <div class="skill-tags">
           <span class="tag highlight">Illustrator</span>
           <span class="tag highlight">Photoshop</span>
-          <span class="tag">Figma</span>
+          <span class="tag">Editing Video</span>
           <span class="tag">Branding</span>
-          <span class="tag">Typography</span>
         </div>
       </div>
 
@@ -750,11 +838,12 @@
         <div class="skill-icon">// TOOLS</div>
         <div class="skill-title">Strumenti</div>
         <div class="skill-tags">
-          <span class="tag">Git</span>
-          <span class="tag">GitHub</span>
-          <span class="tag">VS Code</span>
-          <span class="tag">Linux</span>
+          <span class="tag highlight">Git</span>
+          <span class="tag highlight">GitHub</span>
+          <span class="tag highlight">macOS</span>
+          <span class="tag highlight">Linux</span>
           <span class="tag">IntelliJ</span>
+          <span class="tag">VS Code</span>
         </div>
       </div>
 
@@ -774,8 +863,8 @@
         <div class="skill-icon">// SOFT</div>
         <div class="skill-title">Soft Skills</div>
         <div class="skill-tags">
-          <span class="tag">Problem solving</span>
-          <span class="tag">Teamwork</span>
+          <span class="tag highlight">Problem solving</span>
+          <span class="tag highlight">Teamwork</span>
           <span class="tag">Attenzione ai dettagli</span>
           <span class="tag">Creatività</span>
         </div>
@@ -785,7 +874,6 @@
   </div>
 </section>
 
-<!-- PROJECTS -->
 <section id="projects">
   <div class="container">
     <div class="section-header">
@@ -793,7 +881,6 @@
       <h2>Progetti</h2>
       <span class="section-line"></span>
     </div>
-
     <div class="projects-list">
 
       <a href="#" class="project-card fade-up">
@@ -849,7 +936,6 @@
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
   <div class="container">
     <div class="section-header">
@@ -857,7 +943,6 @@
       <h2>Contatti</h2>
       <span class="section-line"></span>
     </div>
-
     <div class="contact-grid">
 
       <div class="contact-text fade-up">
@@ -866,11 +951,10 @@
           Sono aperto a collaborazioni, stage, progetti creativi e qualsiasi
           opportunità interessante. Non esitare a scrivermi.
         </p>
-        <a href="mailto:tua@email.com" class="btn btn-primary">Scrivimi una mail →</a>
+        <a href="mailto:me.umbertocimmino.it" class="btn btn-primary">Scrivimi una mail →</a>
       </div>
 
       <div class="contact-links fade-up">
-
         <div class="terminal">
           <div class="terminal-bar">
             <span class="t-dot" style="background:#ff5f57"></span>
@@ -878,64 +962,217 @@
             <span class="t-dot" style="background:#28c840"></span>
           </div>
           <div class="terminal-body">
-            <div><span class="t-prompt">~$</span> <span class="t-cmd">whoami</span></div>
-            <div><span class="t-out">→</span> <span class="t-val">Il Tuo Nome</span></div>
+            <div><span class="t-prompt">~$</span> <span class="t-cmd"> whoami</span></div>
+            <div><span class="t-out">→</span> <span class="t-val"> Umberto Cimmino</span></div>
             <br>
-            <div><span class="t-prompt">~$</span> <span class="t-cmd">cat info.json</span></div>
+            <div><span class="t-prompt">~$</span> <span class="t-cmd"> cat info.json</span></div>
             <div><span class="t-out">{</span></div>
-            <div>&nbsp;&nbsp;<span class="t-out">"email":</span> <span class="t-val">"tua@email.com"</span><span class="t-out">,</span></div>
-            <div>&nbsp;&nbsp;<span class="t-out">"github":</span> <span class="t-val">"@tuousername"</span><span class="t-out">,</span></div>
-            <div>&nbsp;&nbsp;<span class="t-out">"location":</span> <span class="t-val">"Campania, IT"</span><span class="t-out">,</span></div>
+            <div>&nbsp;&nbsp;<span class="t-out">"email":</span> <span class="t-val">"umbertocimmino03@icloud.com"</span><span class="t-out">,</span></div>
+            <div>&nbsp;&nbsp;<span class="t-out">"github":</span> <span class="t-val"><a class="t-gh-link" href="https://github.com/UmbertoCimmino" target="_blank" rel="noopener">"@UmbertoCimmino"</a></span><span class="t-out">,</span></div>
+            <div>&nbsp;&nbsp;<span class="t-out">"linkedin ":</span> <span class="t-val"><a class="t-gh-link" href="https://www.linkedin.com/in/umberto-cimmino-5762421a4/" target="_blank" rel="noopener">"@Umberto Cimmino"</a></span><span class="t-out">,</span></div>
+            <div>&nbsp;&nbsp;<span class="t-out">"location":</span> <span class="t-val">"Campania, SA"</span><span class="t-out">,</span></div>
             <div>&nbsp;&nbsp;<span class="t-out">"status":</span> <span class="t-val">"open to work"</span></div>
             <div><span class="t-out">}</span></div>
             <br>
             <div><span class="t-prompt">~$</span> <span class="t-cursor"></span></div>
           </div>
         </div>
-
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <p>© 2025 Il Tuo Nome — tutti i diritti riservati</p>
+  <p>© 2026 Umberto Cimmino — tutti i diritti riservati</p>
   <p>Progettato &amp; sviluppato con passione</p>
 </footer>
 
 <script>
-  // Scroll fade-in animation
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        const delay = (entry.target.parentElement
-          ? [...entry.target.parentElement.children].indexOf(entry.target) * 80
-          : 0);
-        setTimeout(() => entry.target.classList.add('visible'), delay);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
+/* ── NAV COMMAND TERMINAL & LOGO ── */
+const cmdInput  = document.getElementById('nav-cmd');
+const dropdown  = document.getElementById('nav-dropdown');
+const ddLabel   = document.getElementById('dd-label');
+const ddList    = document.getElementById('dd-list');
+const allOpts   = [...ddList.querySelectorAll('.dd-option')];
 
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+let kbdIdx = -1;
 
-  // Active nav link on scroll
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
+// Ridimensiona l'input in base al testo o al placeholder
+function resizeInput() {
+  const ghost = document.createElement('span');
+  ghost.style.cssText = 'font:400 13px/1 "Space Mono",monospace;letter-spacing:0.05em;visibility:hidden;position:absolute;white-space:pre;top:-999px';
+  ghost.textContent = cmdInput.value || cmdInput.placeholder || 'x';
+  document.body.appendChild(ghost);
+  cmdInput.style.width = (ghost.offsetWidth + 4) + 'px';
+  document.body.removeChild(ghost);
+}
 
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(section => {
-      if (window.scrollY >= section.offsetTop - 200) {
-        current = section.getAttribute('id');
-      }
-    });
-    navLinks.forEach(link => {
-      link.style.color = link.getAttribute('href') === '#' + current
-        ? 'var(--text)' : '';
-    });
+resizeInput();
+
+// Pulisce il testo da prefissi inutili ("cd", "/", ecc.) per la ricerca
+function normalize(s) {
+  return s.replace(/^(cd\s*\/?|\/)/i, '').trim().toLowerCase();
+}
+
+function openDropdown()  { dropdown.classList.add('open'); }
+function closeDropdown() { dropdown.classList.remove('open'); kbdIdx = -1; syncActive(); }
+
+function visibleOpts() {
+  return allOpts.filter(o => o.style.display !== 'none');
+}
+
+function syncActive() {
+  allOpts.forEach((o, i) => o.classList.toggle('active', i === kbdIdx));
+}
+
+function scrollActiveIntoView() {
+  const v = visibleOpts();
+  if (kbdIdx >= 0 && v[kbdIdx]) v[kbdIdx].scrollIntoView({ block: 'nearest' });
+}
+
+function navigateTo(target) {
+  const el = document.getElementById(target);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+  cmdInput.value = '';
+  resizeInput();
+  closeDropdown();
+  cmdInput.blur();
+}
+
+function updateList(raw) {
+  const val = normalize(raw);
+  const prev = ddList.querySelector('.dd-nomatch');
+  if (prev) prev.remove();
+
+  if (val === '') {
+    allOpts.forEach(o => o.style.display = '');
+    ddLabel.textContent = 'sezioni disponibili';
+    ddLabel.style.display = '';
+    openDropdown();
+    return;
+  }
+
+  let matches = 0;
+  allOpts.forEach(opt => {
+    const aliases = opt.dataset.aliases.split(',');
+    const hit = aliases.some(a => a.startsWith(val));
+    opt.style.display = hit ? '' : 'none';
+    if (hit) matches++;
   });
+
+  if (matches === 0) {
+    allOpts.forEach(o => o.style.display = 'none');
+    ddLabel.style.display = 'none';
+    const nm = document.createElement('div');
+    nm.className = 'dd-nomatch';
+    nm.textContent = `nessuna sezione per "${val}"`;
+    ddList.appendChild(nm);
+  } else {
+    ddLabel.textContent = 'suggerimenti';
+    ddLabel.style.display = '';
+  }
+
+  kbdIdx = -1;
+  syncActive();
+  openDropdown();
+}
+
+// Event Listeners dell'input
+cmdInput.addEventListener('focus', () => {
+  if (cmdInput.value === 'portfolio') cmdInput.select();
+  updateList(cmdInput.value);
+});
+
+cmdInput.addEventListener('input', e => {
+  resizeInput();
+  updateList(e.target.value);
+});
+
+cmdInput.addEventListener('keydown', e => {
+  const vis = visibleOpts();
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    kbdIdx = Math.min(kbdIdx + 1, vis.length - 1);
+    syncActive(); scrollActiveIntoView();
+
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    kbdIdx = Math.max(kbdIdx - 1, 0);
+    syncActive(); scrollActiveIntoView();
+
+  } else if (e.key === 'Tab') {
+    e.preventDefault();
+    if (vis.length > 0) {
+      cmdInput.value = vis[0].dataset.target;
+      resizeInput();
+      updateList(cmdInput.value);
+    }
+
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (kbdIdx >= 0 && vis[kbdIdx]) {
+      navigateTo(vis[kbdIdx].dataset.target);
+    } else if (vis.length === 1) {
+      navigateTo(vis[0].dataset.target);
+    } else {
+      const v = normalize(cmdInput.value);
+      const found = allOpts.find(o => o.dataset.aliases.split(',').includes(v));
+      if (found) navigateTo(found.dataset.target);
+    }
+
+  } else if (e.key === 'Escape') {
+    cmdInput.value = 'portfolio';
+    resizeInput();
+    closeDropdown();
+    cmdInput.blur();
+  }
+});
+
+// Click sulle opzioni del dropdown
+ddList.addEventListener('click', e => {
+  const opt = e.target.closest('.dd-option');
+  if (opt) navigateTo(opt.dataset.target);
+});
+
+// Chiusura al click esterno e reset del testo se vuoto
+document.addEventListener('click', e => {
+  if (!e.target.closest('#nav-cmd-wrap')) {
+    if (cmdInput.value.trim() === '') {
+      cmdInput.value = 'portfolio';
+      resizeInput();
+    }
+    closeDropdown();
+  }
+});
+
+/* ── FADE IN ON SCROLL ── */
+const fadeObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const siblings = [...(entry.target.parentElement?.children ?? [])];
+    const delay = siblings.indexOf(entry.target) * 80;
+    setTimeout(() => entry.target.classList.add('visible'), delay);
+    fadeObs.unobserve(entry.target);
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+
+/* ── ACTIVE NAV LINK ON SCROLL ── */
+const pageSections = document.querySelectorAll('section[id]');
+const navLinks     = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  pageSections.forEach(sec => {
+    if (window.scrollY >= sec.offsetTop - 200) current = sec.id;
+  });
+  navLinks.forEach(link => {
+    link.style.color = link.getAttribute('href') === '#' + current ? 'var(--text)' : '';
+  });
+}, { passive: true });
 </script>
 
 </body>
