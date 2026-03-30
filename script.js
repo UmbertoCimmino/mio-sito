@@ -217,3 +217,67 @@ window.addEventListener('scroll', () => {
     badgeWrap.style.transform = 'translateY(0)';
   }
 }, { passive: true });
+(function () {
+  const dot   = document.getElementById('c-dot');
+  const ring  = document.getElementById('c-ring');
+  const trail = document.getElementById('c-trail');
+
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  let mx = 0, my = 0;
+  let rx = 0, ry = 0;
+  let tx = 0, ty = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  });
+
+  (function loop() {
+    rx += (mx - rx) * 0.13;
+    ry += (my - ry) * 0.13;
+    tx += (mx - tx) * 0.06;
+    ty += (my - ty) * 0.06;
+
+    ring.style.left  = rx + 'px';
+    ring.style.top   = ry + 'px';
+    trail.style.left = tx + 'px';
+    trail.style.top  = ty + 'px';
+
+    requestAnimationFrame(loop);
+  })();
+
+  /* — Hover interattivi — */
+  const SEL = 'a,button,input,label,.project-card,.skill-card,.dd-option,.btn,.t-gh-link,.status-badge';
+  function addHov(el) {
+    el.addEventListener('mouseenter', () => { dot.classList.add('hov'); ring.classList.add('hov'); });
+    el.addEventListener('mouseleave', () => { dot.classList.remove('hov'); ring.classList.remove('hov'); });
+  }
+  document.querySelectorAll(SEL).forEach(addHov);
+
+  /* Osserva elementi aggiunti dinamicamente (dropdown) */
+  new MutationObserver(muts => {
+    muts.forEach(m => m.addedNodes.forEach(n => {
+      if (n.nodeType === 1) {
+        if (n.matches && n.matches(SEL)) addHov(n);
+        n.querySelectorAll && n.querySelectorAll(SEL).forEach(addHov);
+      }
+    }));
+  }).observe(document.body, { childList: true, subtree: true });
+
+  /* — Testo selezionabile — */
+  document.addEventListener('mouseover', e => {
+    const isTxt = ['P','SPAN','H1','H2','H3','LI'].includes(e.target.tagName);
+    dot.classList.toggle('txt', isTxt);
+    ring.classList.toggle('txt', isTxt);
+  });
+
+  /* — Click feedback — */
+  document.addEventListener('mousedown', () => { dot.classList.add('clk'); ring.classList.add('clk'); });
+  document.addEventListener('mouseup',   () => { dot.classList.remove('clk'); ring.classList.remove('clk'); });
+
+  /* — Entrata/uscita finestra — */
+  document.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; trail.style.opacity='0'; });
+  document.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; trail.style.opacity='1'; });
+})();
