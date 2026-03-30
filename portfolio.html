@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Tuo Nome — Computer Science Student & Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #181818;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.18);
+    --text: #e8e6df;
+    --muted: #6b6b6b;
+    --accent: #c8f135;
+    --accent2: #4ade80;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--muted); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-inner {
+    max-width: 900px;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--muted);
+  }
+
+  .hero-desc {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+
+  .hero-desc strong { color: var(--text); font-weight: 600; }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0a;
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    background: #d4f855;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+  }
+
+  /* ── STATUS BADGE ── */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    background: rgba(74,222,128,0.08);
+    border: 1px solid rgba(74,222,128,0.2);
+    padding: 0.4rem 0.8rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent2);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 5rem 3rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  h2 {
+    font-family: var(--sans);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 60px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── ABOUT ── */
+  #about .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    margin-bottom: 1rem;
+    line-height: 1.9;
+    font-size: 0.95rem;
+  }
+
+  .about-text p strong { color: var(--text); }
+
+  .about-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+
+  .info-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .info-value { color: var(--text); }
+
+  .diploma-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(200,241,53,0.08);
+    border: 1px solid rgba(200,241,53,0.2);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  /* ── SKILLS ── */
+  #skills { background: var(--bg2); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .skill-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .skill-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+
+  .skill-icon {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+    opacity: 0.7;
+  }
+
+  .skill-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .tag.highlight {
+    color: var(--accent);
+    background: rgba(200,241,53,0.06);
+    border-color: rgba(200,241,53,0.2);
+  }
+
+  /* ── PROJECTS ── */
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+
+  .project-card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg3);
+  }
+
+  .project-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 28px;
+  }
+
+  .project-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .project-info p {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .project-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+  }
+
+  .project-lang {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .project-arrow {
+    color: var(--muted);
+    font-size: 1rem;
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  .project-card:hover .project-arrow {
+    transform: translateX(4px);
+    color: var(--text);
+  }
+
+  /* WIP badge */
+  .wip {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: #f59e0b;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--bg2); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .contact-text h3 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.8rem;
+  }
+
+  .contact-text p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.2rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.9rem;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .contact-link:hover {
+    border-color: var(--border-hover);
+    transform: translateX(4px);
+  }
+
+  .contact-link-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.1rem;
+  }
+
+  /* ── TERMINAL BLOCK ── */
+  .terminal {
+    background: #0f0f0f;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    background: #161616;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .terminal-body {
+    padding: 1.2rem 1.2rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 2;
+  }
+
+  .t-prompt { color: var(--accent); }
+  .t-cmd { color: var(--text); }
+  .t-out { color: var(--muted); }
+  .t-val { color: var(--accent2); }
+  .t-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--accent);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FADE IN ANIMATION ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    #hero { padding: 6rem 1.5rem 3rem; }
+    section { padding: 4rem 1.5rem; }
+    #about .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .project-card { grid-template-columns: auto 1fr; }
+    .project-meta { display: none; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <span>~/</span>portfolio
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      Disponibile per collaborazioni &amp; stage
+    </div>
+
+    <div class="hero-tag">Computer Science Student · Anno II</div>
+
+    <h1>
+      Il tuo<br>
+      <em>nome.</em>
+    </h1>
+
+    <p class="hero-desc">
+      Studente universitario a <strong>Fisciano (UNISA)</strong>, diplomato perito informatico <strong>con lode</strong>.
+      Appassionato di programmazione, progettazione web e <strong>graphic design</strong>.
+    </p>
+
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">Vedi i miei lavori →</a>
+      <a href="#contact" class="btn btn-ghost">Contattami</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Chi sono</h2>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-text fade-up">
+        <p>
+          Sono uno studente universitario iscritto al secondo anno di <strong>Computer Science</strong>
+          presso l'Università degli Studi di Salerno — Fisciano.
+        </p>
+        <p>
+          Ho conseguito il diploma da <strong>Perito Informatico</strong> con il massimo dei voti,
+          acquisendo una solida base in informatica, reti e sviluppo software.
+        </p>
+        <p>
+          Mi diletto nella creazione di <strong>grafiche digitali</strong> e sono appassionato di design.
+          Credo che la tecnologia e l'estetica debbano andare di pari passo.
+        </p>
+      </div>
+
+      <div class="about-info fade-up">
+        <div class="info-row">
+          <span class="info-label">Università</span>
+          <span class="info-value">UNISA, Fisciano</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Corso</span>
+          <span class="info-value">Computer Science — Anno II</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Diploma</span>
+          <span class="info-value">
+            Perito Informatico &nbsp;
+            <span class="diploma-badge">★ 100/100</span>
+          </span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Luogo</span>
+          <span class="info-value">Campania, Italia</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Interessi</span>
+          <span class="info-value">Dev · Design · Open Source</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Competenze</h2>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="skills-grid">
+
+      <div class="skill-card fade-up">
+        <div class="skill-icon">// PROGRAMMING</div>
+        <div class="skill-title">Linguaggi</div>
+        <div class="skill-tags">
+          <span class="tag highlight">Java</span>
+          <span class="tag highlight">Python</span>
+          <span class="tag highlight">C</span>
+          <span class="tag">C++</span>
+          <span class="tag">Bash</span>
+        </div>
+      </div>
+
+      <div class="skill-card fade-up">
+        <div class="skill-icon">// WEB</div>
+        <div class="skill-title">Progettazione Web</div>
+        <div class="skill-tags">
+          <span class="tag highlight">HTML5</span>
+          <span class="tag highlight">CSS3</span>
+          <span class="tag highlight">JavaScript</span>
+          <span class="tag">Responsive Design</span>
+          <span class="tag">UI/UX Base</span>
+        </div>
+      </div>
+
+      <div class="skill-card fade-up">
+        <div class="skill-icon">// DESIGN</div>
+        <div class="skill-title">Graphic Design</div>
+        <div class="skill-tags">
+          <span class="tag highlight">Illustrator</span>
+          <span class="tag highlight">Photoshop</span>
+          <span class="tag">Figma</span>
+          <span class="tag">Branding</span>
+          <span class="tag">Typography</span>
+        </div>
+      </div>
+
+      <div class="skill-card fade-up">
+        <div class="skill-icon">// TOOLS</div>
+        <div class="skill-title">Strumenti</div>
+        <div class="skill-tags">
+          <span class="tag">Git</span>
+          <span class="tag">GitHub</span>
+          <span class="tag">VS Code</span>
+          <span class="tag">Linux</span>
+          <span class="tag">IntelliJ</span>
+        </div>
+      </div>
+
+      <div class="skill-card fade-up">
+        <div class="skill-icon">// CS</div>
+        <div class="skill-title">Informatica</div>
+        <div class="skill-tags">
+          <span class="tag">Algoritmi</span>
+          <span class="tag">Strutture dati</span>
+          <span class="tag">Reti</span>
+          <span class="tag">Basi di dati</span>
+          <span class="tag">OOP</span>
+        </div>
+      </div>
+
+      <div class="skill-card fade-up">
+        <div class="skill-icon">// SOFT</div>
+        <div class="skill-title">Soft Skills</div>
+        <div class="skill-tags">
+          <span class="tag">Problem solving</span>
+          <span class="tag">Teamwork</span>
+          <span class="tag">Attenzione ai dettagli</span>
+          <span class="tag">Creatività</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Progetti</h2>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="projects-list">
+
+      <a href="#" class="project-card fade-up">
+        <span class="project-num">01</span>
+        <div class="project-info">
+          <h3>Portfolio Personale</h3>
+          <p>Questo stesso sito — progettato e sviluppato da zero con HTML, CSS e JS vanilla.</p>
+        </div>
+        <div class="project-meta">
+          <span class="project-lang">HTML · CSS · JS</span>
+        </div>
+        <span class="project-arrow">→</span>
+      </a>
+
+      <a href="#" class="project-card fade-up">
+        <span class="project-num">02</span>
+        <div class="project-info">
+          <h3>Progetto Java — [Titolo]</h3>
+          <p>Descrivi qui il progetto universitario o personale più interessante in Java.</p>
+        </div>
+        <div class="project-meta">
+          <span class="project-lang">Java</span>
+          <span class="wip">WIP</span>
+        </div>
+        <span class="project-arrow">→</span>
+      </a>
+
+      <a href="#" class="project-card fade-up">
+        <span class="project-num">03</span>
+        <div class="project-info">
+          <h3>Grafica / Brand — [Nome]</h3>
+          <p>Progetto di graphic design: logo, identità visiva o illustrazione digitale.</p>
+        </div>
+        <div class="project-meta">
+          <span class="project-lang">Illustrator · AI</span>
+        </div>
+        <span class="project-arrow">→</span>
+      </a>
+
+      <a href="#" class="project-card fade-up">
+        <span class="project-num">04</span>
+        <div class="project-info">
+          <h3>Script Python — [Titolo]</h3>
+          <p>Tool o script in Python sviluppato per automazione, analisi dati o altro.</p>
+        </div>
+        <div class="project-meta">
+          <span class="project-lang">Python</span>
+        </div>
+        <span class="project-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Contatti</h2>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="contact-grid">
+
+      <div class="contact-text fade-up">
+        <h3>Parliamoci.</h3>
+        <p>
+          Sono aperto a collaborazioni, stage, progetti creativi e qualsiasi
+          opportunità interessante. Non esitare a scrivermi.
+        </p>
+        <a href="mailto:tua@email.com" class="btn btn-primary">Scrivimi una mail →</a>
+      </div>
+
+      <div class="contact-links fade-up">
+
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="t-dot" style="background:#ff5f57"></span>
+            <span class="t-dot" style="background:#febc2e"></span>
+            <span class="t-dot" style="background:#28c840"></span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="t-prompt">~$</span> <span class="t-cmd">whoami</span></div>
+            <div><span class="t-out">→</span> <span class="t-val">Il Tuo Nome</span></div>
+            <br>
+            <div><span class="t-prompt">~$</span> <span class="t-cmd">cat info.json</span></div>
+            <div><span class="t-out">{</span></div>
+            <div>&nbsp;&nbsp;<span class="t-out">"email":</span> <span class="t-val">"tua@email.com"</span><span class="t-out">,</span></div>
+            <div>&nbsp;&nbsp;<span class="t-out">"github":</span> <span class="t-val">"@tuousername"</span><span class="t-out">,</span></div>
+            <div>&nbsp;&nbsp;<span class="t-out">"location":</span> <span class="t-val">"Campania, IT"</span><span class="t-out">,</span></div>
+            <div>&nbsp;&nbsp;<span class="t-out">"status":</span> <span class="t-val">"open to work"</span></div>
+            <div><span class="t-out">}</span></div>
+            <br>
+            <div><span class="t-prompt">~$</span> <span class="t-cursor"></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Il Tuo Nome — tutti i diritti riservati</p>
+  <p>Progettato &amp; sviluppato con passione</p>
+</footer>
+
+<script>
+  // Scroll fade-in animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        const delay = (entry.target.parentElement
+          ? [...entry.target.parentElement.children].indexOf(entry.target) * 80
+          : 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 200) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current
+        ? 'var(--text)' : '';
+    });
+  });
+</script>
+
+</body>
+</html>
