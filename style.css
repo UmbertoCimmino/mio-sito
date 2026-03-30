@@ -113,6 +113,7 @@
   min-width: 4px;
   caret-color: var(--accent);
   padding: 0 6px;
+  width: 100px;
 }
 
   #nav-cmd::placeholder { color: var(--muted); opacity: 0.4; }
