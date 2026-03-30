@@ -730,8 +730,17 @@
 
   .fade-side.visible { opacity: 1; transform: translateX(0); }
 
-  /* ── RESPONSIVE ── */
+/* ── RESPONSIVE ── */
   @media (max-width: 768px) {
+    /* Disabilita lo scroll a scatti su mobile per uno scorrimento libero */
+    html { 
+      scroll-snap-type: none; 
+    }
+    section, #hero, footer { 
+      scroll-snap-align: none; 
+      min-height: auto; /* Rimuove l'altezza forzata a 100vh per un flusso più naturale */
+    }
+
     nav { 
       padding: 1rem 1.5rem; 
       justify-content: center;
@@ -740,13 +749,26 @@
       display: none; 
     }
     .nav-links { gap: 1.2rem; }
-    #hero { padding: 6rem 1.5rem 3rem; }
+    
+    /* Ridimensiona il titolo per evitare che allarghi la pagina */
+    h1 { font-size: clamp(2.5rem, 12vw, 3.5rem); }
+    
+    #hero { padding: 8rem 1.5rem 4rem; }
     section { padding: 4rem 1.5rem; }
+    
     #about .about-grid { grid-template-columns: 1fr; gap: 2rem; }
     .skills-grid { grid-template-columns: 1fr; }
     .contact-grid { grid-template-columns: 1fr; }
     .project-card { grid-template-columns: auto 1fr; padding: 1.5rem; gap: 1rem; }
     .project-meta { display: none; }
+    
+    /* Contiene testi lunghi come email o link all'interno del terminale */
+    .terminal-body {
+      overflow-x: auto;
+      font-size: 13px;
+      padding: 1.2rem;
+    }
+
     footer { flex-direction: column; gap: 0.5rem; text-align: center; }
     
     .status-badge-wrap {
