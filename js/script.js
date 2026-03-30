@@ -1,11 +1,19 @@
-/* ── NAV COMMAND TERMINAL & LOGO ── */
+// Dizionario dei temi cromatici configurati in RGB
+const siteThemes = {
+  'red': { accent: '#ff3366', rgb: '255, 51, 102', hover: '#ff668c', accent2: '#ff8080', rgb2: '255, 128, 128' },
+  'purple': { accent: '#b066ff', rgb: '176, 102, 255', hover: '#c999ff', accent2: '#d9b3ff', rgb2: '217, 179, 255' },
+  'blue': { accent: '#00d4ff', rgb: '0, 212, 255', hover: '#4de4ff', accent2: '#80bfff', rgb2: '128, 191, 255' },
+  'default': { accent: '#c8f135', rgb: '200, 241, 53', hover: '#d4f855', accent2: '#4ade80', rgb2: '74, 222, 128' }
+};
+
 const cmdInput  = document.getElementById('nav-cmd');
 const dropdown  = document.getElementById('nav-dropdown');
 const ddLabel   = document.getElementById('dd-label');
 const ddList    = document.getElementById('dd-list');
-const allOpts   = [...ddList.querySelectorAll('.dd-option')];
+let allOpts     = [...ddList.querySelectorAll('.dd-option')];
 
 let kbdIdx = -1;
+let typingTimeout; // Variabile per controllare l'animazione di scrittura
 
 function resizeInput() {
   const ghost = document.createElement('span');
@@ -18,65 +26,137 @@ function resizeInput() {
 
 resizeInput();
 
-function normalize(s) {
-  return s.replace(/^(cd\s*\/?|\/)/i, '').trim().toLowerCase();
-}
+/* ── ANIMAZIONE DI SCRITTURA INIZIALE ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const textToType = "portfolio";
+  let charIndex = 0;
+  
+  // Svuota l'input all'avvio
+  cmdInput.value = "";
+  resizeInput();
+
+  function typeChar() {
+    if (charIndex < textToType.length) {
+      cmdInput.value += textToType.charAt(charIndex);
+      resizeInput();
+      charIndex++;
+      typingTimeout = setTimeout(typeChar, 120); // Velocità di digitazione (120ms per carattere)
+    }
+  }
+
+  // Aspetta mezzo secondo prima di iniziare
+  typingTimeout = setTimeout(typeChar, 600);
+});
 
 function openDropdown()  { dropdown.classList.add('open'); }
 function closeDropdown() { dropdown.classList.remove('open'); kbdIdx = -1; syncActive(); }
 
-function visibleOpts() {
-  return allOpts.filter(o => o.style.display !== 'none');
-}
+function visibleOpts() { return allOpts.filter(o => o.style.display !== 'none'); }
 
 function syncActive() {
-  allOpts.forEach((o, i) => o.classList.toggle('active', i === kbdIdx));
+  allOpts.forEach(o => o.classList.remove('active'));
+  const vis = visibleOpts();
+  if (kbdIdx >= 0 && vis[kbdIdx]) vis[kbdIdx].classList.add('active');
 }
 
 function scrollActiveIntoView() {
-  const v = visibleOpts();
-  if (kbdIdx >= 0 && v[kbdIdx]) v[kbdIdx].scrollIntoView({ block: 'nearest' });
+  const vis = visibleOpts();
+  if (kbdIdx >= 0 && vis[kbdIdx]) vis[kbdIdx].scrollIntoView({ block: 'nearest' });
 }
 
-function navigateTo(target) {
-  const el = document.getElementById(target);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
+// ── ESECUZIONE AZIONE FINALE ──
+function executeAction(target) {
+  if (target.startsWith('theme-')) {
+    const colorName = target.replace('theme-', ''); 
+    const theme = siteThemes[colorName];
+    
+    // Cambia le variabili root CSS al volo
+    if (theme) {
+      const root = document.documentElement;
+      root.style.setProperty('--accent', theme.accent);
+      root.style.setProperty('--accent-rgb', theme.rgb);
+      root.style.setProperty('--accent-hover', theme.hover);
+      root.style.setProperty('--accent2', theme.accent2);
+      root.style.setProperty('--accent2-rgb', theme.rgb2);
+    }
+  } else {
+    // Scorre alla sezione
+    const el = document.getElementById(target);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+  
   cmdInput.value = '';
   resizeInput();
   closeDropdown();
   cmdInput.blur();
 }
 
+// ── SMISTAMENTO (Autocompilazione vs Esecuzione) ──
+function handleSelection(opt) {
+  if (opt.dataset.fill) {
+    cmdInput.value = opt.dataset.fill;
+    resizeInput();
+    updateList(cmdInput.value);
+    cmdInput.focus();
+  } else if (opt.dataset.target) {
+    executeAction(opt.dataset.target);
+  }
+}
+
+// ── LOGICA DI RICERCA GERARCHICA DEL TERMINALE ──
 function updateList(raw) {
-  const val = normalize(raw);
   const prev = ddList.querySelector('.dd-nomatch');
   if (prev) prev.remove();
 
-  if (val === '') {
-    allOpts.forEach(o => o.style.display = '');
-    ddLabel.textContent = 'sezioni disponibili';
-    ddLabel.style.display = '';
-    openDropdown();
-    return;
+  const rawVal = raw.toLowerCase().trimStart();
+  let matches = 0;
+
+  allOpts.forEach(o => o.style.display = 'none');
+
+  if (rawVal.startsWith('set color')) {
+    const search = rawVal.replace(/^set\s+color\s*/, '').trim();
+    document.querySelectorAll('.opt-theme').forEach(opt => {
+      const aliases = opt.dataset.aliases.split(',');
+      if (search === '' || aliases.some(a => a.startsWith(search))) {
+        opt.style.display = ''; matches++;
+      }
+    });
+    ddLabel.textContent = 'scegli un colore';
+    
+  } else if (rawVal.startsWith('set')) {
+    const search = rawVal.replace(/^set\s*/, '').trim();
+    document.querySelectorAll('.opt-cmd-set').forEach(opt => {
+      if (search === '' || 'color'.startsWith(search)) {
+        opt.style.display = ''; matches++;
+      }
+    });
+    ddLabel.textContent = 'sotto-comandi disponibili';
+    
+  } else {
+    const search = rawVal.replace(/^(cd\s*\/?|\/)/, '').trim();
+    
+    document.querySelectorAll('.opt-section').forEach(opt => {
+      const aliases = opt.dataset.aliases.split(',');
+      if (search === '' || aliases.some(a => a.startsWith(search))) {
+        opt.style.display = ''; matches++;
+      }
+    });
+    
+    const cmdRoot = document.querySelector('.opt-cmd-root');
+    if (search === '' || 'set'.startsWith(search)) {
+      cmdRoot.style.display = ''; matches++;
+    }
+    
+    ddLabel.textContent = 'sezioni e comandi';
   }
 
-  let matches = 0;
-  allOpts.forEach(opt => {
-    const aliases = opt.dataset.aliases.split(',');
-    const hit = aliases.some(a => a.startsWith(val));
-    opt.style.display = hit ? '' : 'none';
-    if (hit) matches++;
-  });
-
   if (matches === 0) {
-    allOpts.forEach(o => o.style.display = 'none');
     ddLabel.style.display = 'none';
     const nm = document.createElement('div');
     nm.className = 'dd-nomatch';
-    nm.textContent = `nessuna sezione per "${val}"`;
+    nm.textContent = `nessun comando trovato`;
     ddList.appendChild(nm);
   } else {
-    ddLabel.textContent = 'suggerimenti';
     ddLabel.style.display = '';
   }
 
@@ -86,11 +166,15 @@ function updateList(raw) {
 }
 
 cmdInput.addEventListener('focus', () => {
+  // Se l'utente clicca mentre l'animazione è in corso, la interrompiamo
+  clearTimeout(typingTimeout);
+  
   if (cmdInput.value === 'portfolio') cmdInput.select();
   updateList(cmdInput.value);
 });
 
 cmdInput.addEventListener('input', e => {
+  clearTimeout(typingTimeout); // Interrompe l'animazione se l'utente digita
   resizeInput();
   updateList(e.target.value);
 });
@@ -110,22 +194,22 @@ cmdInput.addEventListener('keydown', e => {
 
   } else if (e.key === 'Tab') {
     e.preventDefault();
-    if (vis.length > 0) {
-      cmdInput.value = vis[0].dataset.target;
-      resizeInput();
-      updateList(cmdInput.value);
-    }
+    if (vis.length > 0) handleSelection(vis[0]); 
 
   } else if (e.key === 'Enter') {
     e.preventDefault();
     if (kbdIdx >= 0 && vis[kbdIdx]) {
-      navigateTo(vis[kbdIdx].dataset.target);
+      handleSelection(vis[kbdIdx]);
     } else if (vis.length === 1) {
-      navigateTo(vis[0].dataset.target);
+      handleSelection(vis[0]);
     } else {
-      const v = normalize(cmdInput.value);
-      const found = allOpts.find(o => o.dataset.aliases.split(',').includes(v));
-      if (found) navigateTo(found.dataset.target);
+      const v = cmdInput.value.toLowerCase().trim();
+      let exactMatch = vis.find(o => {
+        if (o.dataset.fill) return o.dataset.fill.trim() === v;
+        if (o.dataset.aliases) return o.dataset.aliases.split(',').includes(v.replace(/^set\s+color\s*/, ''));
+        return false;
+      });
+      if (exactMatch) handleSelection(exactMatch);
     }
 
   } else if (e.key === 'Escape') {
@@ -138,7 +222,7 @@ cmdInput.addEventListener('keydown', e => {
 
 ddList.addEventListener('click', e => {
   const opt = e.target.closest('.dd-option');
-  if (opt) navigateTo(opt.dataset.target);
+  if (opt) handleSelection(opt);
 });
 
 document.addEventListener('click', e => {
@@ -153,7 +237,6 @@ document.addEventListener('click', e => {
 
 /* ── CURSORE GLOWING SULLA NAVBAR ── */
 const mainNav = document.getElementById('main-nav');
-
 mainNav.addEventListener('mousemove', (e) => {
   const rect = mainNav.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -175,14 +258,13 @@ const fadeObs = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.fade-up, .fade-side').forEach(el => fadeObs.observe(el));
 
-/* ── ACTIVE NAV LINK ON SCROLL (Gestione Dinamica Highlighting) ── */
+/* ── ACTIVE NAV LINK ON SCROLL ── */
 const pageSections = document.querySelectorAll('section[id], #hero');
 const navLinks     = document.querySelectorAll('.nav-links a');
 
 window.addEventListener('scroll', () => {
   let current = '';
   pageSections.forEach(sec => {
-    // Calcolo per far accendere la categoria poco prima che la sezione raggiunga la cima
     const sectionTop = sec.offsetTop;
     if (window.scrollY >= sectionTop - 300) {
       current = sec.getAttribute('id');
@@ -197,7 +279,6 @@ window.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-// Scateniamo l'evento scroll al caricamento per evidenziare subito la prima voce
 window.dispatchEvent(new Event('scroll'));
 
 /* ── EVITA SOVRAPPOSIZIONE DEL BADGE COL FOOTER ── */
@@ -208,7 +289,6 @@ window.addEventListener('scroll', () => {
   if (!badgeWrap || !footerElement) return;
   const footerRect = footerElement.getBoundingClientRect();
   const viewportHeight = window.innerHeight;
-  
   const overlap = viewportHeight - footerRect.top;
   
   if (overlap > 0) {
@@ -217,12 +297,14 @@ window.addEventListener('scroll', () => {
     badgeWrap.style.transform = 'translateY(0)';
   }
 }, { passive: true });
+
+/* ── CURSORE CUSTOM ANIMATO ── */
 (function () {
   const dot   = document.getElementById('c-dot');
   const ring  = document.getElementById('c-ring');
   const trail = document.getElementById('c-trail');
 
-  if (window.matchMedia('(hover: none)').matches) return;
+  if (!dot || window.matchMedia('(hover: none)').matches) return;
 
   let mx = 0, my = 0;
   let rx = 0, ry = 0;
@@ -248,7 +330,6 @@ window.addEventListener('scroll', () => {
     requestAnimationFrame(loop);
   })();
 
-  /* — Hover interattivi — */
   const SEL = 'a,button,input,label,.project-card,.skill-card,.dd-option,.btn,.t-gh-link,.status-badge';
   function addHov(el) {
     el.addEventListener('mouseenter', () => { dot.classList.add('hov'); ring.classList.add('hov'); });
@@ -256,7 +337,6 @@ window.addEventListener('scroll', () => {
   }
   document.querySelectorAll(SEL).forEach(addHov);
 
-  /* Osserva elementi aggiunti dinamicamente (dropdown) */
   new MutationObserver(muts => {
     muts.forEach(m => m.addedNodes.forEach(n => {
       if (n.nodeType === 1) {
@@ -266,18 +346,15 @@ window.addEventListener('scroll', () => {
     }));
   }).observe(document.body, { childList: true, subtree: true });
 
-  /* — Testo selezionabile — */
   document.addEventListener('mouseover', e => {
     const isTxt = ['P','SPAN','H1','H2','H3','LI'].includes(e.target.tagName);
     dot.classList.toggle('txt', isTxt);
     ring.classList.toggle('txt', isTxt);
   });
 
-  /* — Click feedback — */
   document.addEventListener('mousedown', () => { dot.classList.add('clk'); ring.classList.add('clk'); });
   document.addEventListener('mouseup',   () => { dot.classList.remove('clk'); ring.classList.remove('clk'); });
 
-  /* — Entrata/uscita finestra — */
   document.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; trail.style.opacity='0'; });
   document.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; trail.style.opacity='1'; });
 })();
