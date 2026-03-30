@@ -111,17 +111,18 @@
     user-select: none;
   }
 
-  #nav-cmd {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 13px;
-    letter-spacing: 0.05em;
-    min-width: 4px;
-    caret-color: var(--accent);
-  }
+#nav-cmd {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  min-width: 4px;
+  caret-color: var(--accent);
+  padding: 0 6px;
+}
 
   #nav-cmd::placeholder { color: var(--muted); opacity: 0.4; }
 
@@ -1090,7 +1091,7 @@ function resizeInput() {
   ghost.style.cssText = 'font:400 13px/1 "Space Mono",monospace;letter-spacing:0.05em;visibility:hidden;position:absolute;white-space:pre;top:-999px';
   ghost.textContent = cmdInput.value || cmdInput.placeholder || 'x';
   document.body.appendChild(ghost);
-  cmdInput.style.width = (ghost.offsetWidth + 4) + 'px';
+  cmdInput.style.width = (ghost.offsetWidth + 16) + 'px';
   document.body.removeChild(ghost);
 }
 
