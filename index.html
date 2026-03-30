@@ -17,27 +17,56 @@
 <nav id="main-nav">
   <div class="nav-cmd-wrap" id="nav-cmd-wrap" title="Clicca per navigare">
     <span class="nav-cmd-prefix">~/</span>
-    <input id="nav-cmd" value="portfolio" placeholder="cd /sezione..." autocomplete="off" spellcheck="false">
+    <input id="nav-cmd" value="" placeholder="cd /sezione..." autocomplete="off" spellcheck="false">
 
     <div class="nav-dropdown" id="nav-dropdown">
       <div class="dropdown-label" id="dd-label">sezioni disponibili</div>
       <div id="dd-list">
-        <div class="dd-option" data-target="about" data-aliases="about,chi sono,info">
+        
+        <div class="dd-option opt-section" data-target="about" data-aliases="about,chi sono,info">
           <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">about</span></div>
           <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Chi sono</span><span class="dd-badge">↩</span></div>
         </div>
-        <div class="dd-option" data-target="skills" data-aliases="skills,competenze,skill,linguaggi">
+        <div class="dd-option opt-section" data-target="skills" data-aliases="skills,competenze,skill,linguaggi">
           <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">skills</span></div>
           <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Competenze</span><span class="dd-badge">↩</span></div>
         </div>
-        <div class="dd-option" data-target="projects" data-aliases="projects,progetti,project,lavori">
+        <div class="dd-option opt-section" data-target="projects" data-aliases="projects,progetti,project,lavori">
           <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">projects</span></div>
           <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Progetti</span><span class="dd-badge">↩</span></div>
         </div>
-        <div class="dd-option" data-target="contact" data-aliases="contact,contatti,contacts,email">
+        <div class="dd-option opt-section" data-target="contact" data-aliases="contact,contatti,contacts,email">
           <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">contact</span></div>
           <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Contatti</span><span class="dd-badge">↩</span></div>
         </div>
+
+        <div class="dd-option opt-cmd-root" data-fill="set ">
+          <div class="dd-left"><span class="dd-name">set</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Impostazioni</span><span class="dd-badge">→</span></div>
+        </div>
+
+        <div class="dd-option opt-cmd-set" data-fill="set color ">
+          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set </span><span class="dd-name">color</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Cambia tema</span><span class="dd-badge">→</span></div>
+        </div>
+
+        <div class="dd-option opt-theme" data-target="theme-red" data-aliases="red,rosso">
+          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set color </span><span class="dd-name">red</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Tema Rosso</span><span class="dd-badge">↩</span></div>
+        </div>
+        <div class="dd-option opt-theme" data-target="theme-purple" data-aliases="purple,viola">
+          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set color </span><span class="dd-name">purple</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Tema Viola</span><span class="dd-badge">↩</span></div>
+        </div>
+        <div class="dd-option opt-theme" data-target="theme-blue" data-aliases="blue,blu">
+          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set color </span><span class="dd-name">blue</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Tema Blu</span><span class="dd-badge">↩</span></div>
+        </div>
+        <div class="dd-option opt-theme" data-target="theme-default" data-aliases="default,originale,reset">
+          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set color </span><span class="dd-name">default</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Tema Originale</span><span class="dd-badge">↩</span></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -53,7 +82,7 @@
 <div class="status-badge-wrap" id="badge-wrap">
   <div class="status-badge fade-up visible">
     <span class="status-dot"></span>
-    <span class="status-text">Disponibile&nbsp<span class="status-extra"> per collaborazioni &amp; stage</span></span>
+    <span class="status-text">Disponibile&nbsp;<span class="status-extra"> per collaborazioni &amp; stage</span></span>
   </div>
 </div>
 
@@ -304,6 +333,7 @@
   <p>© 2026 Umberto Cimmino — tutti i diritti riservati</p>
   <p>Progettato &amp; sviluppato con passione</p>
 </footer>
+
 <div id="c-dot"></div>
 <div id="c-ring"></div>
 <div id="c-trail"></div>
