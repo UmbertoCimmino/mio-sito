@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cmdInput.value += textToType.charAt(charIndex);
       resizeInput();
       charIndex++;
-      typingTimeout = setTimeout(typeChar, 120); // Velocità di digitazione (120ms per carattere)
+      typingTimeout = setTimeout(typeChar, 120);
     }
   }
 
@@ -166,15 +166,13 @@ function updateList(raw) {
 }
 
 cmdInput.addEventListener('focus', () => {
-  // Se l'utente clicca mentre l'animazione è in corso, la interrompiamo
   clearTimeout(typingTimeout);
-  
   if (cmdInput.value === 'portfolio') cmdInput.select();
   updateList(cmdInput.value);
 });
 
 cmdInput.addEventListener('input', e => {
-  clearTimeout(typingTimeout); // Interrompe l'animazione se l'utente digita
+  clearTimeout(typingTimeout);
   resizeInput();
   updateList(e.target.value);
 });
@@ -186,16 +184,13 @@ cmdInput.addEventListener('keydown', e => {
     e.preventDefault();
     kbdIdx = Math.min(kbdIdx + 1, vis.length - 1);
     syncActive(); scrollActiveIntoView();
-
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
     kbdIdx = Math.max(kbdIdx - 1, 0);
     syncActive(); scrollActiveIntoView();
-
   } else if (e.key === 'Tab') {
     e.preventDefault();
     if (vis.length > 0) handleSelection(vis[0]); 
-
   } else if (e.key === 'Enter') {
     e.preventDefault();
     if (kbdIdx >= 0 && vis[kbdIdx]) {
@@ -211,7 +206,6 @@ cmdInput.addEventListener('keydown', e => {
       });
       if (exactMatch) handleSelection(exactMatch);
     }
-
   } else if (e.key === 'Escape') {
     cmdInput.value = 'portfolio';
     resizeInput();
@@ -258,9 +252,11 @@ const fadeObs = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.fade-up, .fade-side').forEach(el => fadeObs.observe(el));
 
-/* ── ACTIVE NAV LINK ON SCROLL ── */
+/* ── ACTIVE NAV LINK & SCROLL INDICATOR ── */
 const pageSections = document.querySelectorAll('section[id], #hero');
 const navLinks     = document.querySelectorAll('.nav-links a');
+const secIndicator = document.getElementById('section-indicator');
+let scrollTimeout;
 
 window.addEventListener('scroll', () => {
   let current = '';
@@ -277,15 +273,31 @@ window.addEventListener('scroll', () => {
       link.classList.add('active');
     }
   });
+
+  if (secIndicator && window.innerWidth > 768) {
+    const sectionName = current === 'hero' ? 'index' : current;
+    secIndicator.textContent = `/${sectionName}`;
+    secIndicator.classList.add('visible');
+    
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      secIndicator.classList.remove('visible');
+    }, 1200);
+  }
 }, { passive: true });
 
 window.dispatchEvent(new Event('scroll'));
 
-/* ── EVITA SOVRAPPOSIZIONE DEL BADGE COL FOOTER ── */
+/* ── EVITA SOVRAPPOSIZIONE DEL BADGE COL FOOTER (Solo Desktop) ── */
 const badgeWrap = document.getElementById('badge-wrap');
 const footerElement = document.getElementById('footer');
 
 window.addEventListener('scroll', () => {
+  if (window.innerWidth <= 768) {
+    if (badgeWrap) badgeWrap.style.transform = '';
+    return;
+  }
+  
   if (!badgeWrap || !footerElement) return;
   const footerRect = footerElement.getBoundingClientRect();
   const viewportHeight = window.innerHeight;
@@ -330,7 +342,7 @@ window.addEventListener('scroll', () => {
     requestAnimationFrame(loop);
   })();
 
-  const SEL = 'a,button,input,label,.project-card,.skill-card,.dd-option,.btn,.t-gh-link,.status-badge';
+  const SEL = 'a,button,input,label,.project-card,.skill-card,.dd-option,.btn,.t-gh-link,.status-badge,.theme-btn';
   function addHov(el) {
     el.addEventListener('mouseenter', () => { dot.classList.add('hov'); ring.classList.add('hov'); });
     el.addEventListener('mouseleave', () => { dot.classList.remove('hov'); ring.classList.remove('hov'); });
@@ -358,3 +370,56 @@ window.addEventListener('scroll', () => {
   document.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; trail.style.opacity='0'; });
   document.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; trail.style.opacity='1'; });
 })();
+
+/* ── FEEDBACK SONORO (TASTI E CLICK) ── */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playTickSound() {
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  const osc = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.04);
+
+  gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime); 
+  gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+
+  osc.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.04);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!e.repeat && !['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) {
+    playTickSound();
+  }
+});
+
+document.addEventListener('mousedown', (e) => {
+  if (e.target.closest('a, button, .dd-option, input, .project-card, .t-gh-link, .theme-btn')) {
+    playTickSound();
+  }
+});
+
+/* ── MOBILE THEME SWITCHER LOGIC ── */
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const themeName = e.target.dataset.theme;
+    const theme = siteThemes[themeName];
+    if (theme) {
+      const root = document.documentElement;
+      root.style.setProperty('--accent', theme.accent);
+      root.style.setProperty('--accent-rgb', theme.rgb);
+      root.style.setProperty('--accent-hover', theme.hover);
+      root.style.setProperty('--accent2', theme.accent2);
+      root.style.setProperty('--accent2-rgb', theme.rgb2);
+      playTickSound();
+    }
+  });
+});
