@@ -35,6 +35,10 @@
           <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">projects</span></div>
           <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Progetti</span><span class="dd-badge">↩</span></div>
         </div>
+        <div class="dd-option opt-section" data-target="documents" data-aliases="documents,documenti,cv,curriculum,pdf">
+          <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">documents</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Documenti e CV</span><span class="dd-badge">↩</span></div>
+        </div>
         <div class="dd-option opt-section" data-target="contact" data-aliases="contact,contatti,contacts,email">
           <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">contact</span></div>
           <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Contatti</span><span class="dd-badge">↩</span></div>
@@ -75,9 +79,12 @@
     <li><a href="#about">about</a></li>
     <li><a href="#skills">skills</a></li>
     <li><a href="#projects">projects</a></li>
+    <li><a href="#documents">documents</a></li>
     <li><a href="#contact">contact</a></li>
   </ul>
 </nav>
+
+<div id="section-indicator" class="section-indicator"></div>
 
 <div class="status-badge-wrap" id="badge-wrap">
   <div class="status-badge fade-up visible">
@@ -282,10 +289,39 @@
   </div>
 </section>
 
-<section id="contact">
+<section id="documents">
   <div class="container">
     <div class="section-header fade-side">
       <span class="section-num">04</span>
+      <h2>Documenti</h2>
+      <span class="section-line"></span>
+    </div>
+    
+    <div class="documents-content fade-up">
+      <div class="wip-banner">
+        <span class="wip-icon">~#</span>
+        <span class="wip-text">System msg: Sezione in fase di sviluppo. Lavori in corso . . .</span>
+      </div>
+
+      <div class="doc-grid">
+        <div class="doc-card">
+          <div class="doc-info">
+            <h3>Curriculum Vitae</h3>
+            <p>Il mio percorso formativo, competenze e progetti in formato PDF (versione stampabile).</p>
+          </div>
+          <div class="doc-action">
+            <a href="#" onclick="event.preventDefault();" class="btn btn-ghost" style="opacity: 0.5;">Scarica PDF ↓</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-header fade-side">
+      <span class="section-num">05</span>
       <h2>Contatti</h2>
       <span class="section-line"></span>
     </div>
@@ -334,9 +370,16 @@
   <p>Progettato &amp; sviluppato con passione</p>
 </footer>
 
+<div class="mobile-theme-switcher">
+  <button class="theme-btn" data-theme="red" style="--btn-color: #ff3366;"></button>
+  <button class="theme-btn" data-theme="purple" style="--btn-color: #b066ff;"></button>
+  <button class="theme-btn" data-theme="blue" style="--btn-color: #00d4ff;"></button>
+  <button class="theme-btn" data-theme="default" style="--btn-color: #c8f135;"></button>
+</div>
+
 <div id="c-dot"></div>
 <div id="c-ring"></div>
 <div id="c-trail"></div>
-<script src="js/script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
