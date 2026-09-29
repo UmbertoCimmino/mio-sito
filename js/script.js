@@ -423,3 +423,30 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
     }
   });
 });
+
+// ── Download CV Logic ──
+document.addEventListener('DOMContentLoaded', () => {
+  const cvCheckbox = document.getElementById('cv-download-checkbox');
+  const cvLabel    = document.getElementById('cv-download-label');
+  if (!cvCheckbox || !cvLabel) return;
+
+  const CV_PATH = 'documenti/Umberto_Cimmino_CV.pdf';
+
+  cvCheckbox.addEventListener('change', () => {
+    if (!cvCheckbox.checked) return;
+
+    // 1. Start the actual file download immediately
+    const a = document.createElement('a');
+    a.href = CV_PATH;
+    a.download = 'Umberto_Cimmino_CV.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // 2. Animation plays via CSS (~3.5s), then "Done ✓" appears.
+    //    After 3 more seconds, reset the button for re-use.
+    setTimeout(() => {
+      cvCheckbox.checked = false;
+    }, 7000);
+  });
+});

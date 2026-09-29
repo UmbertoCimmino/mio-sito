@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/download-btn.css">
 </head>
 
 <body>
@@ -310,7 +311,19 @@
             <p>Il mio percorso formativo, competenze e progetti in formato PDF (versione stampabile).</p>
           </div>
           <div class="doc-action">
-            <a href="#" onclick="event.preventDefault();" class="btn btn-ghost" style="opacity: 0.5;">Scarica PDF ↓</a>
+            <div class="download-container">
+              <label class="download-label" id="cv-download-label">
+                <input type="checkbox" class="download-input" id="cv-download-checkbox" />
+                <span class="download-circle">
+                  <svg class="download-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19V5m0 14-4-4m4 4 4-4" />
+                  </svg>
+                  <div class="download-square"></div>
+                </span>
+                <p class="download-title">Download</p>
+                <p class="download-title">Done ✓</p>
+              </label>
+            </div>
           </div>
         </div>
       </div>
