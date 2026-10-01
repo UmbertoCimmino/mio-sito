@@ -174,7 +174,7 @@ body.loading {
     padding: 2rem 4vw;
 }
 .hero-title {
-    font-size: clamp(3rem, 11.5vw, 12rem);
+    font-size: clamp(2.5rem, 8.5vw, 10rem);
     line-height: 1.1; /* prevents clipping of lower parts of text */
     text-transform: uppercase;
     letter-spacing: -0.04em;
@@ -378,7 +378,7 @@ body.loading {
 .t-muted { color: var(--muted); }
 
 .huge-text {
-    font-size: clamp(4rem, 10vw, 12rem);
+    font-size: clamp(3rem, 8.5vw, 10rem);
     line-height: 0.8;
     margin-bottom: 5vh;
 }
@@ -399,7 +399,7 @@ body.loading {
     padding-bottom: 10vh;
 }
 .contact-huge {
-    font-size: clamp(4rem, 10vw, 12vw);
+    font-size: clamp(3rem, 8.5vw, 10vw);
     line-height: 0.9;
     letter-spacing: -0.03em;
     margin-bottom: 8vh;
@@ -489,7 +489,7 @@ body.loading {
 /* Responsive Overrides */
 @media (max-width: 768px) {
     .nav-right { display: none; }
-    .hero-title { font-size: 15vw; }
+    .hero-title { font-size: 11vw; }
     .hero-bottom {
         flex-direction: column;
         align-items: flex-start;
