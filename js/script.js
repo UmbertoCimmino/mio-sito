@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cursor.style.transform = `translate(calc(-50% + ${cursorX}px), calc(-50% + ${cursorY}px))`;
         });
 
-        const links = document.querySelectorAll('a, label, .p-tags span');
+        const links = document.querySelectorAll('a, label, .p-tags span, .back-to-top');
         links.forEach(link => {
             link.addEventListener('mouseenter', () => cursor.classList.add('active'));
             link.addEventListener('mouseleave', () => cursor.classList.remove('active'));
@@ -134,17 +134,40 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // ─── 7. WIP BANNER MARQUEE ───
-    gsap.to('.marquee-wip', {
-        xPercent: -50,
-        ease: "none",
-        scrollTrigger: {
-            trigger: '.wip-banner-large',
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
-        }
-    });
+    // ─── 7. TERMINAL TYPING ANIMATION (DOCUMENTS) ───
+    const terminalOutput = document.getElementById('t-output');
+    
+    if (terminalOutput) {
+        const terminalLines = [
+            { text: "guest@umberto:~$ ./load_documents.sh", class: "t-msg", delay: 500 },
+            { text: "Loading modules...", class: "t-muted", delay: 400 },
+            { text: "[WARN] Database connection slow...", class: "t-accent", delay: 800 },
+            { text: "[ERROR] System msg: Sezione in fase di sviluppo.", class: "t-err", delay: 300 },
+            { text: "[ERROR] Lavori in corso . . .", class: "t-err", delay: 200 }
+        ];
+
+        let terminalTriggered = false;
+
+        ScrollTrigger.create({
+            trigger: "#wip-terminal",
+            start: "top 80%",
+            onEnter: () => {
+                if (terminalTriggered) return;
+                terminalTriggered = true;
+                
+                let currentDelay = 0;
+                terminalLines.forEach((line) => {
+                    setTimeout(() => {
+                        const p = document.createElement('div');
+                        p.className = line.class;
+                        p.textContent = line.text;
+                        terminalOutput.appendChild(p);
+                    }, currentDelay);
+                    currentDelay += line.delay;
+                });
+            }
+        });
+    }
 
     // ─── 8. DOWNLOAD CV LOGIC ───
     const cvCheckbox = document.getElementById('cv-download-checkbox');
@@ -166,6 +189,14 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 cvCheckbox.checked = false;
             }, 7000);
+        });
+    }
+
+    // ─── 9. BACK TO TOP ───
+    const backToTop = document.getElementById('back-to-top');
+    if (backToTop) {
+        backToTop.addEventListener('click', () => {
+            lenis.scrollTo(0, { duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
         });
     }
 

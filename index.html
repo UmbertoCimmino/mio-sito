@@ -44,7 +44,7 @@
                 <div class="hero-content">
                     <h1 class="hero-title">
                         <div class="line-mask"><div class="line">UMBERTO</div></div>
-                        <div class="line-mask"><div class="line outline">CIMMINO</div></div>
+                        <div class="line-mask"><div class="line accent-text">CIMMINO</div></div>
                     </h1>
                     <div class="hero-bottom">
                         <div class="hero-role">
@@ -58,7 +58,7 @@
                 </div>
             </section>
 
-            <!-- ABOUT (Scrub Text Reveal) -->
+            <!-- ABOUT -->
             <section class="about" id="about">
                 <div class="container">
                     <div class="about-label">( 01. ABOUT ME )</div>
@@ -83,7 +83,7 @@
                 </div>
             </section>
 
-            <!-- SKILLS (Marquee & Tags) -->
+            <!-- SKILLS -->
             <section class="skills" id="skills">
                 <div class="skills-marquee-wrap">
                     <div class="skills-marquee">
@@ -117,7 +117,7 @@
                 </div>
             </section>
 
-            <!-- PROJECTS (Pinned Stacking Cards) -->
+            <!-- PROJECTS -->
             <section class="projects" id="projects">
                 <div class="container">
                     <div class="about-label">( 03. SELECTED WORKS )</div>
@@ -179,17 +179,27 @@
                 <div class="container">
                     <div class="about-label">( 04. DOCUMENTS )</div>
                     
-                    <div class="wip-banner-large">
-                        <div class="marquee-wip">
-                            <span>SYSTEM MSG: SEZIONE IN FASE DI SVILUPPO - LAVORI IN CORSO - </span>
-                            <span>SYSTEM MSG: SEZIONE IN FASE DI SVILUPPO - LAVORI IN CORSO - </span>
+                    <!-- NEW TERMINAL WIP COMPONENT -->
+                    <div class="terminal-wip" id="wip-terminal">
+                        <div class="t-header">
+                            <div class="t-dots">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <div class="t-title">bash -- documents</div>
+                        </div>
+                        <div class="t-body">
+                            <div id="t-output"></div>
+                            <div class="t-input-line">
+                                <span class="t-cursor" id="t-cursor">_</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="doc-download-area">
                         <h2 class="huge-text">GET MY CV</h2>
                         <div class="doc-action">
-                            <!-- Download Button Component (Preserved structure) -->
                             <div class="download-container">
                                 <label class="download-label" id="cv-download-label">
                                     <input type="checkbox" class="download-input" id="cv-download-checkbox" />
@@ -211,26 +221,35 @@
             <!-- CONTACT -->
             <section class="contact" id="contact">
                 <div class="container contact-container">
-                    <h2 class="contact-huge">LET'S TALK</h2>
-                    <div class="contact-links">
-                        <a href="mailto:me@umbertocimmino.it" class="c-link">
-                            <span class="c-link-text">me@umbertocimmino.it</span>
-                            <span class="c-link-arrow">↗</span>
-                        </a>
-                        <a href="https://github.com/UmbertoCimmino" target="_blank" class="c-link">
-                            <span class="c-link-text">GitHub</span>
-                            <span class="c-link-arrow">↗</span>
-                        </a>
-                        <a href="https://www.linkedin.com/in/umberto-cimmino-5762421a4/" target="_blank" class="c-link">
-                            <span class="c-link-text">LinkedIn</span>
-                            <span class="c-link-arrow">↗</span>
-                        </a>
+                    <div class="contact-header">
+                        <div class="about-label">( 05. CONTACT )</div>
+                        <h2 class="contact-huge">LET'S TALK</h2>
+                    </div>
+                    
+                    <div class="contact-grid">
+                        <div class="contact-info">
+                            <p>Sono aperto a collaborazioni, stage, progetti creativi e qualsiasi opportunità interessante. Non esitare a scrivermi per fare due chiacchiere.</p>
+                        </div>
+                        <div class="contact-links">
+                            <a href="mailto:me@umbertocimmino.it" class="c-link">
+                                <span class="c-link-text">me@umbertocimmino.it</span>
+                                <span class="c-link-arrow">↗</span>
+                            </a>
+                            <a href="https://github.com/UmbertoCimmino" target="_blank" class="c-link">
+                                <span class="c-link-text">GitHub</span>
+                                <span class="c-link-arrow">↗</span>
+                            </a>
+                            <a href="https://www.linkedin.com/in/umberto-cimmino-5762421a4/" target="_blank" class="c-link">
+                                <span class="c-link-text">LinkedIn</span>
+                                <span class="c-link-arrow">↗</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 
                 <footer class="footer">
                     <p>© 2026 UMBERTO CIMMINO. ALL RIGHTS RESERVED.</p>
-                    <p>SCROLL TO TOP ↑</p>
+                    <p class="back-to-top" id="back-to-top" style="cursor:pointer;">SCROLL TO TOP ↑</p>
                 </footer>
             </section>
 
@@ -238,14 +257,10 @@
     </main>
 
     <!-- SCRIPTS -->
-    <!-- GSAP & Plugins -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <!-- SplitType for Text Animations -->
     <script src="https://unpkg.com/split-type"></script>
-    <!-- Lenis for Smooth Scrolling -->
     <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-
     <script src="js/script.js"></script>
 </body>
 </html>
