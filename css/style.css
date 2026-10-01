@@ -404,9 +404,83 @@ body.loading {
     line-height: 0.8;
     margin-bottom: 5vh;
 }
-.doc-action {
+
+/* ── API MODULE (DOCUMENTS) ── */
+.api-window {
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 5vh;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    max-width: 900px;
+}
+.api-top {
+    background: #1a1a1a;
+    padding: 1rem;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.api-dots {
+    display: flex;
+    gap: 8px;
+    margin-right: 20px;
+}
+.api-dots .dot { width: 12px; height: 12px; border-radius: 50%; }
+.api-tab {
+    background: #111;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.api-content { padding: 2rem; }
+.api-req-line, .api-res-line {
+    font-family: var(--font-mono);
+    font-size: clamp(14px, 1.5vw, 18px);
+    margin-bottom: 1.5rem;
+}
+.http-method { color: #c678dd; font-weight: bold; }
+.http-url { color: var(--text); }
+.http-protocol { color: var(--muted); margin-left: 10px; }
+.http-status { color: var(--accent2); font-weight: bold; }
+.res-time { color: var(--muted); margin-left: 10px; }
+
+.api-code pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(13px, 1.4vw, 16px);
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+}
+.json-key { color: #56b6c2; }
+.json-string { color: #98c379; }
+
+.api-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.05);
+    width: 100%;
+}
+.api-action-row {
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0d0d0d;
+}
+.api-hint {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+}
+.api-response {
+    padding: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    background: rgba(var(--accent-rgb), 0.02);
 }
 
 /* ── CONTACT & CONTACT TERMINAL ── */

@@ -237,23 +237,58 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ─── 9. DOWNLOAD CV LOGIC ───
+    // ─── 9. API DOWNLOAD CV LOGIC ───
     const cvCheckbox = document.getElementById('cv-download-checkbox');
-    const cvLabel    = document.getElementById('cv-download-label');
-    if (cvCheckbox && cvLabel) {
+    const cvLabel = document.getElementById('cv-download-label');
+    const resBlock = document.getElementById('api-response-block');
+    const resText = document.getElementById('api-response-text');
+
+    if (cvCheckbox && cvLabel && resBlock && resText) {
         const CV_PATH = 'documenti/Umberto_Cimmino_CV.pdf';
+        
         cvCheckbox.addEventListener('change', () => {
             if (!cvCheckbox.checked) return;
 
-            const a = document.createElement('a');
-            a.href = CV_PATH;
-            a.download = 'Umberto_Cimmino_CV.pdf';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            // Show response block
+            resBlock.style.display = 'block';
+            resText.innerHTML = '';
+            
+            const jsonResponse = `{
+  <span class="json-key">"status"</span>: <span class="json-string">"success"</span>,
+  <span class="json-key">"payload"</span>: <span class="json-string">"UmbertoCimmino_CV.pdf"</span>,
+  <span class="json-key">"action"</span>: <span class="json-string">"downloading..."</span>
+}`;
+            
+            // Type out the response
+            let i = 0;
+            const typeJSON = setInterval(() => {
+                // To avoid breaking HTML tags during typing, we inject the whole string raw and reveal it via substring
+                // But since it has HTML spans, we need to reveal text cleanly. 
+                // A simpler trick: set the full HTML but clip it, or just use SplitType/GSAP.
+                // Let's just set the full HTML and fade it in.
+                clearInterval(typeJSON);
+                resText.innerHTML = jsonResponse;
+                gsap.fromTo(resText, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 });
+                
+                // Trigger file download shortly after response appears
+                setTimeout(() => {
+                    const a = document.createElement('a');
+                    a.href = CV_PATH;
+                    a.download = 'Umberto_Cimmino_CV.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }, 800);
 
+            }, 100);
+
+            // Reset UI after CSS animation finishes (7s)
             setTimeout(() => {
                 cvCheckbox.checked = false;
+                gsap.to(resBlock, { opacity: 0, duration: 0.5, onComplete: () => {
+                    resBlock.style.display = 'none';
+                    resBlock.style.opacity = 1;
+                }});
             }, 7000);
         });
     }
