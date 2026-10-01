@@ -117,26 +117,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ─── 6. PROJECT CARDS STACKING ───
-    const cards = gsap.utils.toArray('.project-card');
-    cards.forEach((card, index) => {
-        // We skip the last card because it doesn't need to scale down
-        if (index === cards.length - 1) return;
-        
-        gsap.to(card, {
-            scale: 0.9,
-            opacity: 0.5,
-            scrollTrigger: {
-                trigger: cards[index + 1],
-                start: "top 80%",
-                end: "top 20%",
-                scrub: true
-            }
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    
+    if (!isMobile) {
+        const cards = gsap.utils.toArray('.project-card');
+        cards.forEach((card, index) => {
+            if (index === cards.length - 1) return;
+            gsap.to(card, {
+                scale: 0.9,
+                opacity: 0.5,
+                scrollTrigger: {
+                    trigger: cards[index + 1],
+                    start: "top 80%",
+                    end: "top 20%",
+                    scrub: true
+                }
+            });
         });
-    });
+    }
 
     // ─── 7. TERMINAL TYPING ANIMATION (DOCUMENTS) ───
     const terminalOutput = document.getElementById('t-output');
-    
     if (terminalOutput) {
         const terminalLines = [
             { text: "guest@umberto:~$ ./load_documents.sh", class: "t-msg", delay: 500 },
@@ -169,7 +170,53 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ─── 8. DOWNLOAD CV LOGIC ───
+    // ─── 8. CONTACT TERMINAL ANIMATION ───
+    const contactTerminal = document.getElementById('contact-terminal');
+    const cmdText = document.getElementById('ct-cmd-text');
+    const ctOutput = document.getElementById('ct-output');
+    const ctLinks = gsap.utils.toArray('.ct-link');
+
+    if (contactTerminal && cmdText && ctOutput) {
+        const commandStr = "./get_contacts.sh";
+        let contactTriggered = false;
+
+        ScrollTrigger.create({
+            trigger: contactTerminal,
+            start: "top 80%",
+            onEnter: () => {
+                if (contactTriggered) return;
+                contactTriggered = true;
+
+                // 1. Type the command
+                let i = 0;
+                const typing = setInterval(() => {
+                    cmdText.textContent += commandStr.charAt(i);
+                    i++;
+                    if (i >= commandStr.length) {
+                        clearInterval(typing);
+                        // 2. Show output after a tiny delay
+                        setTimeout(() => {
+                            document.getElementById('ct-cmd-cursor').style.display = 'none';
+                            ctOutput.style.display = 'block';
+                            
+                            // 3. Animate social links appearing
+                            gsap.to(ctLinks, {
+                                y: 0,
+                                opacity: 1,
+                                duration: 0.5,
+                                stagger: 0.2,
+                                ease: "power2.out",
+                                delay: 0.5
+                            });
+
+                        }, 500);
+                    }
+                }, 50);
+            }
+        });
+    }
+
+    // ─── 9. DOWNLOAD CV LOGIC ───
     const cvCheckbox = document.getElementById('cv-download-checkbox');
     const cvLabel    = document.getElementById('cv-download-label');
     if (cvCheckbox && cvLabel) {
@@ -177,7 +224,6 @@ document.addEventListener("DOMContentLoaded", () => {
         cvCheckbox.addEventListener('change', () => {
             if (!cvCheckbox.checked) return;
 
-            // Trigger file download
             const a = document.createElement('a');
             a.href = CV_PATH;
             a.download = 'Umberto_Cimmino_CV.pdf';
@@ -185,14 +231,13 @@ document.addEventListener("DOMContentLoaded", () => {
             a.click();
             document.body.removeChild(a);
 
-            // Reset UI after CSS animation finishes (7s)
             setTimeout(() => {
                 cvCheckbox.checked = false;
             }, 7000);
         });
     }
 
-    // ─── 9. BACK TO TOP ───
+    // ─── 10. BACK TO TOP ───
     const backToTop = document.getElementById('back-to-top');
     if (backToTop) {
         backToTop.addEventListener('click', () => {
