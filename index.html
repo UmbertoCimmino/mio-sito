@@ -1,398 +1,236 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="theme-default">
 <head>
-<meta charset="UTF-8">
-<link rel="icon" type="image/png" href="images/favicon.png?v=2">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Umberto Cimmino — Computer Science Student & Developer</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/download-btn.css">
-</head>
-
-<body>
-
-<nav id="main-nav">
-  <div class="nav-cmd-wrap" id="nav-cmd-wrap" title="Clicca per navigare">
-    <span class="nav-cmd-prefix">~/</span>
-    <input id="nav-cmd" value="" placeholder="cd /sezione..." autocomplete="off" spellcheck="false">
-
-    <div class="nav-dropdown" id="nav-dropdown">
-      <div class="dropdown-label" id="dd-label">sezioni disponibili</div>
-      <div id="dd-list">
-        
-        <div class="dd-option opt-section" data-target="about" data-aliases="about,chi sono,info">
-          <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">about</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Chi sono</span><span class="dd-badge">↩</span></div>
-        </div>
-        <div class="dd-option opt-section" data-target="skills" data-aliases="skills,competenze,skill,linguaggi">
-          <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">skills</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Competenze</span><span class="dd-badge">↩</span></div>
-        </div>
-        <div class="dd-option opt-section" data-target="projects" data-aliases="projects,progetti,project,lavori">
-          <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">projects</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Progetti</span><span class="dd-badge">↩</span></div>
-        </div>
-        <div class="dd-option opt-section" data-target="documents" data-aliases="documents,documenti,cv,curriculum,pdf">
-          <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">documents</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Documenti e CV</span><span class="dd-badge">↩</span></div>
-        </div>
-        <div class="dd-option opt-section" data-target="contact" data-aliases="contact,contatti,contacts,email">
-          <div class="dd-left"><span class="dd-slash">/</span><span class="dd-name">contact</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Contatti</span><span class="dd-badge">↩</span></div>
-        </div>
-
-        <div class="dd-option opt-cmd-root" data-fill="set ">
-          <div class="dd-left"><span class="dd-name">set</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Impostazioni</span><span class="dd-badge">→</span></div>
-        </div>
-
-        <div class="dd-option opt-cmd-set" data-fill="set color ">
-          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set </span><span class="dd-name">color</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Cambia tema</span><span class="dd-badge">→</span></div>
-        </div>
-
-        <div class="dd-option opt-theme" data-target="theme-red" data-aliases="red,rosso">
-          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set color </span><span class="dd-name">red</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Tema Rosso</span><span class="dd-badge">↩</span></div>
-        </div>
-        <div class="dd-option opt-theme" data-target="theme-purple" data-aliases="purple,viola">
-          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set color </span><span class="dd-name">purple</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Tema Viola</span><span class="dd-badge">↩</span></div>
-        </div>
-        <div class="dd-option opt-theme" data-target="theme-blue" data-aliases="blue,blu">
-          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set color </span><span class="dd-name">blue</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Tema Blu</span><span class="dd-badge">↩</span></div>
-        </div>
-        <div class="dd-option opt-theme" data-target="theme-default" data-aliases="default,originale,reset">
-          <div class="dd-left"><span class="dd-slash" style="opacity: 0.5;">set color </span><span class="dd-name">default</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><span class="dd-desc">Tema Originale</span><span class="dd-badge">↩</span></div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <ul class="nav-links">
-    <li><a href="#about">about</a></li>
-    <li><a href="#skills">skills</a></li>
-    <li><a href="#projects">projects</a></li>
-    <li><a href="#documents">documents</a></li>
-    <li><a href="#contact">contact</a></li>
-  </ul>
-</nav>
-
-<div id="section-indicator" class="section-indicator"></div>
-
-<div class="status-badge-wrap" id="badge-wrap">
-  <div class="status-badge fade-up visible">
-    <span class="status-dot"></span>
-    <span class="status-text">Disponibile&nbsp;<span class="status-extra"> per collaborazioni &amp; stage</span></span>
-  </div>
-</div>
-
-<section id="hero">
-  <div class="hero-inner">
-    <div class="hero-tag">Computer Science Student · Anno III</div>
-    <h1>
-      Umberto<br>
-      <em>Cimmino.</em>
-    </h1>
-    <p class="hero-desc">
-      Appassionato di programmazione, progettazione web e <strong>graphic design</strong>.
-    </p>
-    <div class="hero-cta">
-      <a href="#projects" class="btn btn-primary">Vedi i miei lavori →</a>
-      <a href="#contact" class="btn btn-ghost">Contattami</a>
-    </div>
-  </div>
-</section>
-
-<section id="about">
-  <div class="container">
-    <div class="section-header fade-side">
-      <span class="section-num">01</span>
-      <h2>Chi sono</h2>
-      <span class="section-line"></span>
-    </div>
-    <div class="about-grid">
-      <div class="about-text fade-up">
-        <p>
-          Sono uno studente universitario iscritto al terzo anno di <strong>Computer Science</strong>
-          presso <u>l'Università degli Studi di Salerno — Fisciano</u>.
-        </p>
-        <p>
-          Ho conseguito il diploma da <strong>Perito Informatico</strong> presso <u>I.I.S Antonio Pacinotti</u> con il massimo dei voti,
-          acquisendo una solida base in informatica, reti e sviluppo software.
-        </p>
-        <p>
-          Mi diletto nella creazione di <strong>piccoli progetti personali</strong> e sono appassionato di design.
-          Credo che la tecnologia e l'estetica debbano andare di pari passo.
-        </p>
-      </div>
-      <div class="about-info fade-up">
-        <div class="info-row"><span class="info-label">Università</span><span class="info-value">UNISA, Fisciano</span></div>
-        <div class="info-row"><span class="info-label">Corso</span><span class="info-value">Computer Science — Anno III</span></div>
-        <div class="info-row"><span class="info-label">Diploma</span><span class="info-value">Perito Informatico &nbsp;<span class="diploma-badge">★ 100/100</span></span></div>
-        <div class="info-row"><span class="info-label">Luogo</span><span class="info-value">Salerno, Campania, Italia</span></div>
-        <div class="info-row"><span class="info-label">Interessi</span><span class="info-value">Dev · Design · Open Source</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="skills">
-  <div class="container">
-    <div class="section-header fade-side">
-      <span class="section-num">02</span>
-      <h2>Competenze</h2>
-      <span class="section-line"></span>
-    </div>
-    <div class="skills-grid">
-
-      <div class="skill-card fade-up">
-        <div class="skill-icon">// PROGRAMMING</div>
-        <div class="skill-title">Linguaggi</div>
-        <div class="skill-tags">
-          <span class="tag highlight">Java</span>
-          <span class="tag highlight">Python</span>
-          <span class="tag highlight">C</span>
-          <span class="tag">C++</span>
-          <span class="tag">Bash</span>
-        </div>
-      </div>
-
-      <div class="skill-card fade-up">
-        <div class="skill-icon">// WEB</div>
-        <div class="skill-title">Progettazione Web</div>
-        <div class="skill-tags">
-          <span class="tag highlight">HTML5</span>
-          <span class="tag highlight">CSS3</span>
-          <span class="tag highlight">JavaScript</span>
-          <span class="tag">Responsive Design</span>
-          <span class="tag">UI/UX Base</span>
-        </div>
-      </div>
-
-      <div class="skill-card fade-up">
-        <div class="skill-icon">// DESIGN</div>
-        <div class="skill-title">Graphic Design</div>
-        <div class="skill-tags">
-          <span class="tag highlight">Illustrator</span>
-          <span class="tag highlight">Photoshop</span>
-          <span class="tag">Editing Video</span>
-          <span class="tag">Branding</span>
-        </div>
-      </div>
-
-      <div class="skill-card fade-up">
-        <div class="skill-icon">// TOOLS</div>
-        <div class="skill-title">Strumenti</div>
-        <div class="skill-tags">
-          <span class="tag highlight">Git</span>
-          <span class="tag highlight">GitHub</span>
-          <span class="tag highlight">macOS</span>
-          <span class="tag highlight">Linux</span>
-          <span class="tag">IntelliJ</span>
-          <span class="tag">VS Code</span>
-        </div>
-      </div>
-
-      <div class="skill-card fade-up">
-        <div class="skill-icon">// CS</div>
-        <div class="skill-title">Informatica</div>
-        <div class="skill-tags">
-          <span class="tag highlight">Algoritmi</span>
-          <span class="tag">Strutture dati</span>
-          <span class="tag">Reti</span>
-          <span class="tag">Basi di dati</span>
-          <span class="tag">OOP</span>
-        </div>
-      </div>
-
-      <div class="skill-card fade-up">
-        <div class="skill-icon">// SOFT</div>
-        <div class="skill-title">Soft Skills</div>
-        <div class="skill-tags">
-          <span class="tag highlight">Problem solving</span>
-          <span class="tag highlight">Teamwork</span>
-          <span class="tag">Attenzione ai dettagli</span>
-          <span class="tag">Creatività</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<section id="projects">
-  <div class="container">
-    <div class="section-header fade-side">
-      <span class="section-num">03</span>
-      <h2>Progetti</h2>
-      <span class="section-line"></span>
-    </div>
-    <div class="projects-list">
-
-      <a href="#" class="project-card fade-up">
-        <span class="project-num">01</span>
-        <div class="project-info">
-          <h3>Portfolio Personale</h3>
-          <p>Questo stesso sito — progettato e sviluppato da zero con HTML, CSS e JS vanilla.</p>
-        </div>
-        <div class="project-meta">
-          <span class="project-lang">HTML · CSS · JS</span>
-        </div>
-        <span class="project-arrow">→</span>
-      </a>
-
-      <a href="#" class="project-card fade-up">
-        <span class="project-num">02</span>
-        <div class="project-info">
-          <h3>Progetto Java — [Università]</h3>
-          <p>Realizzazione di progetti di base in Java con concetti Object Oriented.</p>
-        </div>
-        <div class="project-meta">
-          <span class="project-lang">Java</span>
-          <span class="wip">WIP</span>
-        </div>
-        <span class="project-arrow">→</span>
-      </a>
-
-      <a href="#" class="project-card fade-up">
-        <span class="project-num">03</span>
-        <div class="project-info">
-          <h3>Grafica / Brand — [Personale]</h3>
-          <p>Progetto di graphic design: logo, identità visiva e illustrazioni digitali.</p>
-        </div>
-        <div class="project-meta">
-          <span class="project-lang">Illustrator · AI</span>
-        </div>
-        <span class="project-arrow">→</span>
-      </a>
-
-      <a href="#" class="project-card fade-up">
-        <span class="project-num">04</span>
-        <div class="project-info">
-          <h3>Script Python — [Base]</h3>
-          <p>Tool e script in Python sviluppati per automazione, analisi dati e altro.</p>
-        </div>
-        <div class="project-meta">
-          <span class="project-lang">Python</span>
-        </div>
-        <span class="project-arrow">→</span>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="documents">
-  <div class="container">
-    <div class="section-header fade-side">
-      <span class="section-num">04</span>
-      <h2>Documenti</h2>
-      <span class="section-line"></span>
-    </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umberto Cimmino | Portfolio</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <div class="documents-content fade-up">
-      <div class="wip-banner">
-        <span class="wip-icon">~#</span>
-        <span class="wip-text">System msg: Sezione in fase di sviluppo. Lavori in corso . . .</span>
-      </div>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/download-btn.css">
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+    <div class="cursor-trail"></div>
 
-      <div class="doc-grid">
-        <div class="doc-card">
-          <div class="doc-info">
-            <h3>Curriculum Vitae</h3>
-            <p>Il mio percorso formativo, competenze e progetti in formato PDF (versione stampabile).</p>
-          </div>
-          <div class="doc-action">
-            <div class="download-container">
-              <label class="download-label" id="cv-download-label">
-                <input type="checkbox" class="download-input" id="cv-download-checkbox" />
-                <span class="download-circle">
-                  <svg class="download-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19V5m0 14-4-4m4 4 4-4" />
-                  </svg>
-                  <div class="download-square"></div>
-                </span>
-                <p class="download-title">Download</p>
-                <p class="download-title">Done ✓</p>
-              </label>
-            </div>
-          </div>
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+        <button data-theme="theme-default" class="theme-btn active" title="Default (Lime)"></button>
+        <button data-theme="theme-blue" class="theme-btn" title="Blue"></button>
+        <button data-theme="theme-purple" class="theme-btn" title="Purple"></button>
+        <button data-theme="theme-red" class="theme-btn" title="Red"></button>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="terminal-header-nav">
+            <span class="prompt">guest@umbertocimmino.it:~$</span>
+            <span class="typed-text"></span><span class="cursor-blink">_</span>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+        <ul class="nav-links">
+            <li><a href="#about">01. About</a></li>
+            <li><a href="#skills">02. Skills</a></li>
+            <li><a href="#projects">03. Projects</a></li>
+            <li><a href="#contact">04. Contact</a></li>
+        </ul>
+    </nav>
 
-<section id="contact">
-  <div class="container">
-    <div class="section-header fade-side">
-      <span class="section-num">05</span>
-      <h2>Contatti</h2>
-      <span class="section-line"></span>
-    </div>
-    <div class="contact-grid">
+    <!-- Grain Overlay -->
+    <div class="grain"></div>
 
-      <div class="contact-text fade-up">
-        <h3>Parliamoci.</h3>
-        <p>
-          Sono aperto a collaborazioni, stage, progetti creativi e qualsiasi
-          opportunità interessante. Non esitare a scrivermi.
-        </p>
-        <a href="mailto:me@umbertocimmino.it" class="btn btn-primary">Scrivimi una mail →</a>
-      </div>
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            <!-- Hero -->
+            <section id="hero" class="hero">
+                <div class="container hero-container">
+                    <h1 class="hero-title">UMBERTO CIMMINO</h1>
+                    <p class="hero-subtitle">Dev · Design · Open Source</p>
+                    <div class="status-badge">
+                        <span class="status-dot"></span>
+                        open to work / disponibile per collaborazioni & stage
+                    </div>
+                </div>
+            </section>
 
-      <div class="contact-links fade-up">
-        <div class="terminal">
-          <div class="terminal-bar">
-            <span class="t-dot" style="background:#ff5f57"></span>
-            <span class="t-dot" style="background:#febc2e"></span>
-            <span class="t-dot" style="background:#28c840"></span>
-          </div>
-          <div class="terminal-body">
-            <div><span class="t-prompt">~$</span> <span class="t-cmd"> whoami</span></div>
-            <div><span class="t-out">→</span> <span class="t-val"> Umberto Cimmino</span></div>
-            <br>
-            <div><span class="t-prompt">~$</span> <span class="t-cmd"> cat info.json</span></div>
-            <div><span class="t-out">{</span></div>
-            <div>&nbsp;&nbsp;<span class="t-out">"email":</span> <span class="t-val">"me@umbertocimmino.it"</span><span class="t-out">,</span></div>
-            <div>&nbsp;&nbsp;<span class="t-out">"github":</span> <span class="t-val"><a class="t-gh-link" href="https://github.com/UmbertoCimmino" target="_blank" rel="noopener">"@UmbertoCimmino"</a></span><span class="t-out">,</span></div>
-            <div>&nbsp;&nbsp;<span class="t-out">"linkedin ":</span> <span class="t-val"><a class="t-gh-link" href="https://www.linkedin.com/in/umberto-cimmino-5762421a4/" target="_blank" rel="noopener">"@UmbertoCimmino"</a></span><span class="t-out">,</span></div>
-            <div>&nbsp;&nbsp;<span class="t-out">"location":</span> <span class="t-val">"Campania, SA"</span><span class="t-out">,</span></div>
-            <div>&nbsp;&nbsp;<span class="t-out">"status":</span> <span class="t-val">"open to work"</span></div>
-            <div><span class="t-out">}</span></div>
-            <br>
-            <div><span class="t-prompt">~$</span> <span class="t-cursor"></span></div>
-          </div>
+            <!-- About -->
+            <section id="about" class="about section-padding">
+                <div class="container">
+                    <h2 class="section-title">01. ABOUT</h2>
+                    <div class="about-grid">
+                        <div class="about-text">
+                            <p class="reveal-text">Hi, I'm Umberto Cimmino, currently studying Computer Science (Anno III) at UNISA, Fisciano.</p>
+                            <p class="reveal-text">Based in Salerno, Campania, Italia.</p>
+                            <p class="reveal-text">I graduated as Perito Informatico at I.I.S Antonio Pacinotti with 100/100.</p>
+                            <p class="reveal-text">I'm passionate about development, design, and open source projects.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills -->
+            <section id="skills" class="skills section-padding">
+                <div class="container">
+                    <h2 class="section-title">02. SKILLS</h2>
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h3>Languages</h3>
+                            <div class="tags">
+                                <span class="tag">Java</span>
+                                <span class="tag">Python</span>
+                                <span class="tag">C</span>
+                                <span class="tag">C++</span>
+                                <span class="tag">Bash</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Web</h3>
+                            <div class="tags">
+                                <span class="tag">HTML5</span>
+                                <span class="tag">CSS3</span>
+                                <span class="tag">JavaScript</span>
+                                <span class="tag">Responsive Design</span>
+                                <span class="tag">UI/UX Base</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Design</h3>
+                            <div class="tags">
+                                <span class="tag">Illustrator</span>
+                                <span class="tag">Photoshop</span>
+                                <span class="tag">Editing Video</span>
+                                <span class="tag">Branding</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Tools</h3>
+                            <div class="tags">
+                                <span class="tag">Git</span>
+                                <span class="tag">GitHub</span>
+                                <span class="tag">macOS</span>
+                                <span class="tag">Linux</span>
+                                <span class="tag">IntelliJ</span>
+                                <span class="tag">VS Code</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3>CS</h3>
+                            <div class="tags">
+                                <span class="tag">Algoritmi</span>
+                                <span class="tag">Strutture dati</span>
+                                <span class="tag">Reti</span>
+                                <span class="tag">Basi di dati</span>
+                                <span class="tag">OOP</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Soft</h3>
+                            <div class="tags">
+                                <span class="tag">Problem solving</span>
+                                <span class="tag">Teamwork</span>
+                                <span class="tag">Attenzione ai dettagli</span>
+                                <span class="tag">Creatività</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects -->
+            <section id="projects" class="projects section-padding">
+                <div class="container">
+                    <h2 class="section-title">03. PROJECTS</h2>
+                    <div class="projects-list">
+                        <div class="project-card">
+                            <div class="project-info">
+                                <h3>Portfolio Personale</h3>
+                                <p>HTML · CSS · JS</p>
+                            </div>
+                        </div>
+                        <div class="project-card">
+                            <div class="project-info">
+                                <h3>Progetto Java [Università]</h3>
+                                <p>Java (WIP)</p>
+                            </div>
+                        </div>
+                        <div class="project-card">
+                            <div class="project-info">
+                                <h3>Grafica / Brand [Personale]</h3>
+                                <p>Illustrator · AI</p>
+                            </div>
+                        </div>
+                        <div class="project-card">
+                            <div class="project-info">
+                                <h3>Script Python [Base]</h3>
+                                <p>Python</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Documents -->
+            <section id="documents" class="documents section-padding">
+                <div class="container">
+                    <h2 class="section-title">04. DOCUMENTS</h2>
+                    
+                    <div class="wip-banner">
+                        <p>> System msg: Sezione in fase di sviluppo. Lavori in corso . . .</p>
+                    </div>
+
+                    <div class="download-section">
+                        <label class="download-label" id="cv-download-label">
+                            <input type="checkbox" class="download-input" id="cv-download-checkbox">
+                            <div class="download-circle">
+                                <svg class="download-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.979 19.804 4.587 19.412C4.195 19.02 3.99933 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.804 19.021 19.412 19.413C19.02 19.805 18.55 20.0007 18 20H6Z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <div class="download-square"></div>
+                            <p class="download-title">Download CV</p>
+                            <p class="download-title">Done ✓</p>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact -->
+            <section id="contact" class="contact section-padding">
+                <div class="container">
+                    <h2 class="section-title">05. CONTACT</h2>
+                    <div class="contact-terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-dots"><span></span><span></span><span></span></div>
+                            <div class="terminal-title">contact.sh</div>
+                        </div>
+                        <div class="terminal-body">
+                            <p><span class="prompt">> Email:</span> <a href="mailto:me@umbertocimmino.it">me@umbertocimmino.it</a></p>
+                            <p><span class="prompt">> GitHub:</span> <a href="https://github.com/UmbertoCimmino" target="_blank">@UmbertoCimmino</a></p>
+                            <p><span class="prompt">> LinkedIn:</span> <a href="https://www.linkedin.com/in/umberto-cimmino-5762421a4/" target="_blank">@UmbertoCimmino</a></p>
+                            <p class="terminal-cursor">_</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <footer class="footer">
+                <div class="container">
+                    <p>© 2026 Umberto Cimmino. All rights reserved.</p>
+                </div>
+            </footer>
         </div>
-      </div>
+    </main>
 
-    </div>
-  </div>
-</section>
-
-<footer id="footer">
-  <p>© 2026 Umberto Cimmino — tutti i diritti riservati</p>
-  <p>Progettato &amp; sviluppato con passione</p>
-</footer>
-
-<div class="mobile-theme-switcher">
-  <button class="theme-btn" data-theme="red" style="--btn-color: #ff3366;"></button>
-  <button class="theme-btn" data-theme="purple" style="--btn-color: #b066ff;"></button>
-  <button class="theme-btn" data-theme="blue" style="--btn-color: #00d4ff;"></button>
-  <button class="theme-btn" data-theme="default" style="--btn-color: #c8f135;"></button>
-</div>
-
-<div id="c-dot"></div>
-<div id="c-ring"></div>
-<div id="c-trail"></div>
-<script src="js/script.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    
+    <script src="js/script.js"></script>
 </body>
 </html>

@@ -1,452 +1,268 @@
-// Dizionario dei temi cromatici configurati in RGB
-const siteThemes = {
-  'red': { accent: '#ff3366', rgb: '255, 51, 102', hover: '#ff668c', accent2: '#ff8080', rgb2: '255, 128, 128' },
-  'purple': { accent: '#b066ff', rgb: '176, 102, 255', hover: '#c999ff', accent2: '#d9b3ff', rgb2: '217, 179, 255' },
-  'blue': { accent: '#00d4ff', rgb: '0, 212, 255', hover: '#4de4ff', accent2: '#80bfff', rgb2: '128, 191, 255' },
-  'default': { accent: '#c8f135', rgb: '200, 241, 53', hover: '#d4f855', accent2: '#4ade80', rgb2: '74, 222, 128' }
-};
-
-const cmdInput  = document.getElementById('nav-cmd');
-const dropdown  = document.getElementById('nav-dropdown');
-const ddLabel   = document.getElementById('dd-label');
-const ddList    = document.getElementById('dd-list');
-let allOpts     = [...ddList.querySelectorAll('.dd-option')];
-
-let kbdIdx = -1;
-let typingTimeout; // Variabile per controllare l'animazione di scrittura
-
-function resizeInput() {
-  const ghost = document.createElement('span');
-  ghost.style.cssText = 'font:400 13px/1 "Space Mono",monospace;letter-spacing:0.05em;visibility:hidden;position:absolute;white-space:pre;top:-999px';
-  ghost.textContent = cmdInput.value || cmdInput.placeholder || 'x';
-  document.body.appendChild(ghost);
-  cmdInput.style.width = (ghost.offsetWidth + 16) + 'px';
-  document.body.removeChild(ghost);
-}
-
-resizeInput();
-
-/* ── ANIMAZIONE DI SCRITTURA INIZIALE ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const textToType = "portfolio";
-  let charIndex = 0;
-  
-  // Svuota l'input all'avvio
-  cmdInput.value = "";
-  resizeInput();
-
-  function typeChar() {
-    if (charIndex < textToType.length) {
-      cmdInput.value += textToType.charAt(charIndex);
-      resizeInput();
-      charIndex++;
-      typingTimeout = setTimeout(typeChar, 120);
-    }
-  }
-
-  // Aspetta mezzo secondo prima di iniziare
-  typingTimeout = setTimeout(typeChar, 600);
-});
-
-function openDropdown()  { dropdown.classList.add('open'); }
-function closeDropdown() { dropdown.classList.remove('open'); kbdIdx = -1; syncActive(); }
-
-function visibleOpts() { return allOpts.filter(o => o.style.display !== 'none'); }
-
-function syncActive() {
-  allOpts.forEach(o => o.classList.remove('active'));
-  const vis = visibleOpts();
-  if (kbdIdx >= 0 && vis[kbdIdx]) vis[kbdIdx].classList.add('active');
-}
-
-function scrollActiveIntoView() {
-  const vis = visibleOpts();
-  if (kbdIdx >= 0 && vis[kbdIdx]) vis[kbdIdx].scrollIntoView({ block: 'nearest' });
-}
-
-// ── ESECUZIONE AZIONE FINALE ──
-function executeAction(target) {
-  if (target.startsWith('theme-')) {
-    const colorName = target.replace('theme-', ''); 
-    const theme = siteThemes[colorName];
-    
-    // Cambia le variabili root CSS al volo
-    if (theme) {
-      const root = document.documentElement;
-      root.style.setProperty('--accent', theme.accent);
-      root.style.setProperty('--accent-rgb', theme.rgb);
-      root.style.setProperty('--accent-hover', theme.hover);
-      root.style.setProperty('--accent2', theme.accent2);
-      root.style.setProperty('--accent2-rgb', theme.rgb2);
-    }
-  } else {
-    // Scorre alla sezione
-    const el = document.getElementById(target);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  }
-  
-  cmdInput.value = '';
-  resizeInput();
-  closeDropdown();
-  cmdInput.blur();
-}
-
-// ── SMISTAMENTO (Autocompilazione vs Esecuzione) ──
-function handleSelection(opt) {
-  if (opt.dataset.fill) {
-    cmdInput.value = opt.dataset.fill;
-    resizeInput();
-    updateList(cmdInput.value);
-    cmdInput.focus();
-  } else if (opt.dataset.target) {
-    executeAction(opt.dataset.target);
-  }
-}
-
-// ── LOGICA DI RICERCA GERARCHICA DEL TERMINALE ──
-function updateList(raw) {
-  const prev = ddList.querySelector('.dd-nomatch');
-  if (prev) prev.remove();
-
-  const rawVal = raw.toLowerCase().trimStart();
-  let matches = 0;
-
-  allOpts.forEach(o => o.style.display = 'none');
-
-  if (rawVal.startsWith('set color')) {
-    const search = rawVal.replace(/^set\s+color\s*/, '').trim();
-    document.querySelectorAll('.opt-theme').forEach(opt => {
-      const aliases = opt.dataset.aliases.split(',');
-      if (search === '' || aliases.some(a => a.startsWith(search))) {
-        opt.style.display = ''; matches++;
-      }
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Initialize Lenis for smooth scrolling
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
     });
-    ddLabel.textContent = 'scegli un colore';
-    
-  } else if (rawVal.startsWith('set')) {
-    const search = rawVal.replace(/^set\s*/, '').trim();
-    document.querySelectorAll('.opt-cmd-set').forEach(opt => {
-      if (search === '' || 'color'.startsWith(search)) {
-        opt.style.display = ''; matches++;
-      }
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
     });
-    ddLabel.textContent = 'sotto-comandi disponibili';
+
+    gsap.ticker.lagSmoothing(0);
+
+    // 2. Custom Cursor
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorRing = document.querySelector('.cursor-ring');
+    const cursorTrail = document.querySelector('.cursor-trail');
     
-  } else {
-    const search = rawVal.replace(/^(cd\s*\/?|\/)/, '').trim();
-    
-    document.querySelectorAll('.opt-section').forEach(opt => {
-      const aliases = opt.dataset.aliases.split(',');
-      if (search === '' || aliases.some(a => a.startsWith(search))) {
-        opt.style.display = ''; matches++;
-      }
+    if (window.matchMedia("(pointer: fine)").matches && cursorDot) {
+        let mouseX = 0, mouseY = 0;
+        let dotX = 0, dotY = 0;
+        let ringX = 0, ringY = 0;
+        let trailX = 0, trailY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        gsap.ticker.add(() => {
+            dotX += (mouseX - dotX) * 0.2;
+            dotY += (mouseY - dotY) * 0.2;
+            ringX += (mouseX - ringX) * 0.1;
+            ringY += (mouseY - ringY) * 0.1;
+            trailX += (mouseX - trailX) * 0.05;
+            trailY += (mouseY - trailY) * 0.05;
+
+            if (cursorDot) cursorDot.style.transform = `translate(calc(-50% + ${dotX}px), calc(-50% + ${dotY}px))`;
+            if (cursorRing) cursorRing.style.transform = `translate(calc(-50% + ${ringX}px), calc(-50% + ${ringY}px))`;
+            if (cursorTrail) cursorTrail.style.transform = `translate(calc(-50% + ${trailX}px), calc(-50% + ${trailY}px))`;
+        });
+    }
+
+    // 3. Theme Switcher
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    const htmlElement = document.documentElement;
+
+    const rgbMap = {
+        'theme-default': '200, 241, 53',
+        'theme-blue': '53, 165, 241',
+        'theme-purple': '165, 53, 241',
+        'theme-red': '241, 53, 90'
+    };
+
+    themeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const theme = btn.getAttribute('data-theme');
+            htmlElement.className = theme;
+            
+            // Update active state
+            themeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Update accent-rgb for download-btn.css
+            htmlElement.style.setProperty('--accent-rgb', rgbMap[theme]);
+        });
     });
-    
-    const cmdRoot = document.querySelector('.opt-cmd-root');
-    if (search === '' || 'set'.startsWith(search)) {
-      cmdRoot.style.display = ''; matches++;
+
+    // 4. Navbar Typing Effect
+    const typedTextSpan = document.querySelector('.typed-text');
+    const textToType = "portfolio";
+    let typeIndex = 0;
+
+    function typeEffect() {
+        if (typeIndex < textToType.length) {
+            typedTextSpan.textContent += textToType.charAt(typeIndex);
+            typeIndex++;
+            setTimeout(typeEffect, 150);
+        }
     }
-    
-    ddLabel.textContent = 'sezioni e comandi';
-  }
+    setTimeout(typeEffect, 1000);
 
-  if (matches === 0) {
-    ddLabel.style.display = 'none';
-    const nm = document.createElement('div');
-    nm.className = 'dd-nomatch';
-    nm.textContent = `nessun comando trovato`;
-    ddList.appendChild(nm);
-  } else {
-    ddLabel.style.display = '';
-  }
+    // 5. Download CV Logic
+    const cvCheckbox = document.getElementById('cv-download-checkbox');
+    if (cvCheckbox) {
+        cvCheckbox.addEventListener('change', () => {
+            if (!cvCheckbox.checked) return;
 
-  kbdIdx = -1;
-  syncActive();
-  openDropdown();
-}
+            // Start download immediately
+            const a = document.createElement('a');
+            a.href = 'documenti/Umberto_Cimmino_CV.pdf';
+            a.download = 'Umberto_Cimmino_CV.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
 
-cmdInput.addEventListener('focus', () => {
-  clearTimeout(typingTimeout);
-  if (cmdInput.value === 'portfolio') cmdInput.select();
-  updateList(cmdInput.value);
-});
-
-cmdInput.addEventListener('input', e => {
-  clearTimeout(typingTimeout);
-  resizeInput();
-  updateList(e.target.value);
-});
-
-cmdInput.addEventListener('keydown', e => {
-  const vis = visibleOpts();
-
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    kbdIdx = Math.min(kbdIdx + 1, vis.length - 1);
-    syncActive(); scrollActiveIntoView();
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    kbdIdx = Math.max(kbdIdx - 1, 0);
-    syncActive(); scrollActiveIntoView();
-  } else if (e.key === 'Tab') {
-    e.preventDefault();
-    if (vis.length > 0) handleSelection(vis[0]); 
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    if (kbdIdx >= 0 && vis[kbdIdx]) {
-      handleSelection(vis[kbdIdx]);
-    } else if (vis.length === 1) {
-      handleSelection(vis[0]);
-    } else {
-      const v = cmdInput.value.toLowerCase().trim();
-      let exactMatch = vis.find(o => {
-        if (o.dataset.fill) return o.dataset.fill.trim() === v;
-        if (o.dataset.aliases) return o.dataset.aliases.split(',').includes(v.replace(/^set\s+color\s*/, ''));
-        return false;
-      });
-      if (exactMatch) handleSelection(exactMatch);
+            // Reset after animation
+            setTimeout(() => {
+                cvCheckbox.checked = false;
+            }, 7000);
+        });
     }
-  } else if (e.key === 'Escape') {
-    cmdInput.value = 'portfolio';
-    resizeInput();
-    closeDropdown();
-    cmdInput.blur();
-  }
-});
 
-ddList.addEventListener('click', e => {
-  const opt = e.target.closest('.dd-option');
-  if (opt) handleSelection(opt);
-});
+    // 6. GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
 
-document.addEventListener('click', e => {
-  if (!e.target.closest('#nav-cmd-wrap')) {
-    if (cmdInput.value.trim() === '') {
-      cmdInput.value = 'portfolio';
-      resizeInput();
+    // Hero Section
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        // Simple manual split text for title
+        const text = heroTitle.textContent;
+        heroTitle.textContent = '';
+        text.split('').forEach(char => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.style.display = 'inline-block';
+            if (char === ' ') span.innerHTML = '&nbsp;';
+            heroTitle.appendChild(span);
+        });
+
+        const chars = heroTitle.querySelectorAll('span');
+        gsap.from(chars, {
+            y: 100,
+            opacity: 0,
+            stagger: 0.05,
+            duration: 1,
+            ease: "back.out(1.7)",
+            delay: 0.5
+        });
     }
-    closeDropdown();
-  }
-});
 
-/* ── CURSORE GLOWING SULLA NAVBAR ── */
-const mainNav = document.getElementById('main-nav');
-mainNav.addEventListener('mousemove', (e) => {
-  const rect = mainNav.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  mainNav.style.setProperty('--mouse-x', `${x}px`);
-  mainNav.style.setProperty('--mouse-y', `${y}px`);
-});
+    gsap.from('.hero-subtitle, .status-badge', {
+        y: 20,
+        opacity: 0,
+        stagger: 0.2,
+        duration: 1,
+        delay: 1.5,
+        ease: "power2.out"
+    });
 
-/* ── FADE IN E SLIDE IN ON SCROLL ── */
-const fadeObs = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const siblings = [...(entry.target.parentElement?.children ?? [])];
-    const delay = siblings.indexOf(entry.target) * 120;
-    setTimeout(() => entry.target.classList.add('visible'), delay);
-    fadeObs.unobserve(entry.target);
-  });
-}, { threshold: 0.1 });
+    // Hero Parallax on Scroll
+    gsap.to('.hero-container', {
+        yPercent: 30,
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: true
+        }
+    });
 
-document.querySelectorAll('.fade-up, .fade-side').forEach(el => fadeObs.observe(el));
+    // About Reveal
+    gsap.utils.toArray('.reveal-text').forEach(text => {
+        gsap.from(text, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: text,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            }
+        });
+    });
 
-/* ── ACTIVE NAV LINK & SCROLL INDICATOR ── */
-const pageSections = document.querySelectorAll('section[id], #hero');
-const navLinks     = document.querySelectorAll('.nav-links a');
-const secIndicator = document.getElementById('section-indicator');
-let scrollTimeout;
+    // Skills Stagger
+    gsap.utils.toArray('.skill-category').forEach((card, i) => {
+        gsap.from(card, {
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            }
+        });
+        
+        // Tags inside card
+        const tags = card.querySelectorAll('.tag');
+        gsap.from(tags, {
+            scale: 0,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 0.5,
+            ease: "back.out(1.5)",
+            scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            }
+        });
+    });
 
-window.addEventListener('scroll', () => {
-  let current = '';
-  pageSections.forEach(sec => {
-    const sectionTop = sec.offsetTop;
-    if (window.scrollY >= sectionTop - 300) {
-      current = sec.getAttribute('id');
-    }
-  });
+    // Projects Parallax Cards
+    gsap.utils.toArray('.project-card').forEach((card, i) => {
+        gsap.from(card, {
+            y: 100,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: card,
+                start: "top 90%",
+                toggleActions: "play none none reverse"
+            }
+        });
+    });
 
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href') === '#' + current) {
-      link.classList.add('active');
-    }
-  });
+    // Documents Section
+    gsap.from('.wip-banner', {
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        scrollTrigger: {
+            trigger: ".documents",
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+        }
+    });
 
-  if (secIndicator && window.innerWidth > 768) {
-    const sectionName = current === 'hero' ? 'index' : current;
-    secIndicator.textContent = `/${sectionName}`;
-    secIndicator.classList.add('visible');
-    
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      secIndicator.classList.remove('visible');
-    }, 1200);
-  }
-}, { passive: true });
+    gsap.from('.download-section', {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.2,
+        scrollTrigger: {
+            trigger: ".documents",
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+        }
+    });
 
-window.dispatchEvent(new Event('scroll'));
+    // Contact Terminal Slide In
+    gsap.from('.contact-terminal', {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+            trigger: ".contact",
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+        }
+    });
 
-/* ── EVITA SOVRAPPOSIZIONE DEL BADGE COL FOOTER (Solo Desktop) ── */
-const badgeWrap = document.getElementById('badge-wrap');
-const footerElement = document.getElementById('footer');
-
-window.addEventListener('scroll', () => {
-  if (window.innerWidth <= 768) {
-    if (badgeWrap) badgeWrap.style.transform = '';
-    return;
-  }
-  
-  if (!badgeWrap || !footerElement) return;
-  const footerRect = footerElement.getBoundingClientRect();
-  const viewportHeight = window.innerHeight;
-  const overlap = viewportHeight - footerRect.top;
-  
-  if (overlap > 0) {
-    badgeWrap.style.transform = `translateY(-${overlap}px)`;
-  } else {
-    badgeWrap.style.transform = 'translateY(0)';
-  }
-}, { passive: true });
-
-/* ── CURSORE CUSTOM ANIMATO ── */
-(function () {
-  const dot   = document.getElementById('c-dot');
-  const ring  = document.getElementById('c-ring');
-  const trail = document.getElementById('c-trail');
-
-  if (!dot || window.matchMedia('(hover: none)').matches) return;
-
-  let mx = 0, my = 0;
-  let rx = 0, ry = 0;
-  let tx = 0, ty = 0;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
-  });
-
-  (function loop() {
-    rx += (mx - rx) * 0.13;
-    ry += (my - ry) * 0.13;
-    tx += (mx - tx) * 0.06;
-    ty += (my - ty) * 0.06;
-
-    ring.style.left  = rx + 'px';
-    ring.style.top   = ry + 'px';
-    trail.style.left = tx + 'px';
-    trail.style.top  = ty + 'px';
-
-    requestAnimationFrame(loop);
-  })();
-
-  const SEL = 'a,button,input,label,.project-card,.skill-card,.dd-option,.btn,.t-gh-link,.status-badge,.theme-btn';
-  function addHov(el) {
-    el.addEventListener('mouseenter', () => { dot.classList.add('hov'); ring.classList.add('hov'); });
-    el.addEventListener('mouseleave', () => { dot.classList.remove('hov'); ring.classList.remove('hov'); });
-  }
-  document.querySelectorAll(SEL).forEach(addHov);
-
-  new MutationObserver(muts => {
-    muts.forEach(m => m.addedNodes.forEach(n => {
-      if (n.nodeType === 1) {
-        if (n.matches && n.matches(SEL)) addHov(n);
-        n.querySelectorAll && n.querySelectorAll(SEL).forEach(addHov);
-      }
-    }));
-  }).observe(document.body, { childList: true, subtree: true });
-
-  document.addEventListener('mouseover', e => {
-    const isTxt = ['P','SPAN','H1','H2','H3','LI'].includes(e.target.tagName);
-    dot.classList.toggle('txt', isTxt);
-    ring.classList.toggle('txt', isTxt);
-  });
-
-  document.addEventListener('mousedown', () => { dot.classList.add('clk'); ring.classList.add('clk'); });
-  document.addEventListener('mouseup',   () => { dot.classList.remove('clk'); ring.classList.remove('clk'); });
-
-  document.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; trail.style.opacity='0'; });
-  document.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; trail.style.opacity='1'; });
-})();
-
-/* ── FEEDBACK SONORO (TASTI E CLICK) ── */
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-function playTickSound() {
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-  const osc = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.04);
-
-  gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime); 
-  gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
-
-  osc.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.04);
-}
-
-document.addEventListener('keydown', (e) => {
-  if (!e.repeat && !['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) {
-    playTickSound();
-  }
-});
-
-document.addEventListener('mousedown', (e) => {
-  if (e.target.closest('a, button, .dd-option, input, .project-card, .t-gh-link, .theme-btn')) {
-    playTickSound();
-  }
-});
-
-/* ── MOBILE THEME SWITCHER LOGIC ── */
-document.querySelectorAll('.theme-btn').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    const themeName = e.target.dataset.theme;
-    const theme = siteThemes[themeName];
-    if (theme) {
-      const root = document.documentElement;
-      root.style.setProperty('--accent', theme.accent);
-      root.style.setProperty('--accent-rgb', theme.rgb);
-      root.style.setProperty('--accent-hover', theme.hover);
-      root.style.setProperty('--accent2', theme.accent2);
-      root.style.setProperty('--accent2-rgb', theme.rgb2);
-      playTickSound();
-    }
-  });
-});
-
-// ── Download CV Logic ──
-document.addEventListener('DOMContentLoaded', () => {
-  const cvCheckbox = document.getElementById('cv-download-checkbox');
-  const cvLabel    = document.getElementById('cv-download-label');
-  if (!cvCheckbox || !cvLabel) return;
-
-  const CV_PATH = 'documenti/Umberto_Cimmino_CV.pdf';
-
-  cvCheckbox.addEventListener('change', () => {
-    if (!cvCheckbox.checked) return;
-
-    // 1. Start the actual file download immediately
-    const a = document.createElement('a');
-    a.href = CV_PATH;
-    a.download = 'Umberto_Cimmino_CV.pdf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    // 2. Animation plays via CSS (~3.5s), then "Done ✓" appears.
-    //    After 3 more seconds, reset the button for re-use.
-    setTimeout(() => {
-      cvCheckbox.checked = false;
-    }, 7000);
-  });
+    // Smooth scroll for nav links
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const target = document.querySelector(targetId);
+            if (target) {
+                lenis.scrollTo(target);
+            }
+        });
+    });
 });
