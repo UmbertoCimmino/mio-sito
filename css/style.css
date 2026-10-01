@@ -405,17 +405,32 @@ body.loading {
     margin-bottom: 5vh;
 }
 
+.section-title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
 /* ── 3D HOLOGRAPHIC CV CARD ── */
 .cv-showcase {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
+}
+.cv-cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    width: 100%;
 }
 .cv-card-wrapper {
     perspective: 1500px;
     width: 100%;
-    max-width: 600px;
-    margin: 5vh auto 10vh 0;
+    max-width: 380px; /* Much more compact size */
     cursor: none;
 }
 .cv-card {
@@ -426,9 +441,9 @@ body.loading {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    padding: 3rem;
+    padding: 2rem;
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
     transform-style: preserve-3d;
     transition: transform 0.1s;
     will-change: transform;
@@ -447,10 +462,10 @@ body.loading {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
 }
 .cv-chip {
-    width: 45px; height: 35px;
+    width: 35px; height: 25px;
     background: linear-gradient(135deg, #d4af37, #aa7c11);
     border-radius: 6px;
     position: relative;
@@ -470,20 +485,20 @@ body.loading {
 }
 .cv-id {
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: 12px;
     color: var(--accent);
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 .cv-card-body h3 {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: 1.5rem;
     letter-spacing: -0.02em;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 .cv-card-body p {
     font-family: var(--font-mono);
     color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 4rem;
+    font-size: 12px;
+    margin-bottom: 3rem;
 }
 .cv-card-footer {
     display: flex;
@@ -493,7 +508,7 @@ body.loading {
 .cv-barcode {
     display: flex;
     gap: 3px;
-    height: 40px;
+    height: 30px;
     opacity: 0.5;
 }
 .cv-barcode span { background: #fff; height: 100%; }
@@ -507,8 +522,6 @@ body.loading {
 .cv-barcode span:nth-child(8) { width: 4px; }
 .cv-barcode span:nth-child(9) { width: 2px; }
 .cv-barcode span:nth-child(10) { width: 1px; }
-.cv-barcode span:nth-child(11) { width: 3px; }
-.cv-barcode span:nth-child(12) { width: 2px; }
 
 /* ── CONTACT & CONTACT TERMINAL ── */
 .contact {
