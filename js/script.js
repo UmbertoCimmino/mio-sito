@@ -49,17 +49,38 @@ document.addEventListener("DOMContentLoaded", () => {
     // ─── 3. PRELOADER & HERO INTRO ───
     const counter = document.getElementById('counter');
     const loaderBar = document.getElementById('loader-bar');
+    const bootText = document.getElementById('boot-text');
     
+    const bootLines = [
+        "Mounting core systems... <span class='ok'>[OK]</span>",
+        "Loading CSS modules... <span class='ok'>[OK]</span>",
+        "Initializing GSAP engine... <span class='ok'>[OK]</span>",
+        "Resolving fonts... <span class='ok'>[OK]</span>",
+        "Starting visual matrix... <span class='ok'>[OK]</span>"
+    ];
+    
+    let bootIndex = 0;
+    const bootInterval = setInterval(() => {
+        if (bootIndex < bootLines.length && bootText) {
+            const p = document.createElement('div');
+            p.className = 'boot-line';
+            p.innerHTML = `<span class="sys">SYS</span> ${bootLines[bootIndex]}`;
+            bootText.appendChild(p);
+            bootIndex++;
+        }
+    }, 300);
+
     let progress = { val: 0 };
     gsap.to(progress, {
         val: 100,
-        duration: 2,
+        duration: 2.5,
         ease: "power2.inOut",
         onUpdate: function() {
             counter.innerText = Math.floor(progress.val) + "%";
             loaderBar.style.width = progress.val + "%";
         },
         onComplete: () => {
+            clearInterval(bootInterval);
             const tl = gsap.timeline();
             tl.to('.preloader', {
                 yPercent: -100,
