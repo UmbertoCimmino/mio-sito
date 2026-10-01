@@ -237,58 +237,58 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ─── 9. API DOWNLOAD CV LOGIC ───
+    // ─── 9. 3D HOLOGRAPHIC CARD LOGIC ───
+    const cardWrapper = document.getElementById('cv-card-wrapper');
+    const cvCard = document.getElementById('cv-card');
+    const cvGlare = document.getElementById('cv-glare');
+
+    if (cardWrapper && cvCard && !isMobile) {
+        cardWrapper.addEventListener('mousemove', (e) => {
+            const rect = cardWrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            // Calculate rotation (max 15 degrees)
+            const rotateX = ((y - centerY) / centerY) * -15;
+            const rotateY = ((x - centerX) / centerX) * 15;
+
+            cvCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            
+            if (cvGlare) {
+                cvGlare.style.transform = `translate(${x}px, ${y}px)`;
+                cvGlare.style.opacity = 0.4;
+            }
+        });
+
+        cardWrapper.addEventListener('mouseleave', () => {
+            cvCard.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+            if (cvGlare) cvGlare.style.opacity = 0;
+        });
+    }
+
+    // ─── 10. DOWNLOAD CV LOGIC ───
     const cvCheckbox = document.getElementById('cv-download-checkbox');
     const cvLabel = document.getElementById('cv-download-label');
-    const resBlock = document.getElementById('api-response-block');
-    const resText = document.getElementById('api-response-text');
 
-    if (cvCheckbox && cvLabel && resBlock && resText) {
+    if (cvCheckbox && cvLabel) {
         const CV_PATH = 'documenti/Umberto_Cimmino_CV.pdf';
         
         cvCheckbox.addEventListener('change', () => {
             if (!cvCheckbox.checked) return;
 
-            // Show response block
-            resBlock.style.display = 'block';
-            resText.innerHTML = '';
-            
-            const jsonResponse = `{
-  <span class="json-key">"status"</span>: <span class="json-string">"success"</span>,
-  <span class="json-key">"payload"</span>: <span class="json-string">"UmbertoCimmino_CV.pdf"</span>,
-  <span class="json-key">"action"</span>: <span class="json-string">"downloading..."</span>
-}`;
-            
-            // Type out the response
-            let i = 0;
-            const typeJSON = setInterval(() => {
-                // To avoid breaking HTML tags during typing, we inject the whole string raw and reveal it via substring
-                // But since it has HTML spans, we need to reveal text cleanly. 
-                // A simpler trick: set the full HTML but clip it, or just use SplitType/GSAP.
-                // Let's just set the full HTML and fade it in.
-                clearInterval(typeJSON);
-                resText.innerHTML = jsonResponse;
-                gsap.fromTo(resText, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 });
-                
-                // Trigger file download shortly after response appears
-                setTimeout(() => {
-                    const a = document.createElement('a');
-                    a.href = CV_PATH;
-                    a.download = 'Umberto_Cimmino_CV.pdf';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }, 800);
-
-            }, 100);
+            const a = document.createElement('a');
+            a.href = CV_PATH;
+            a.download = 'Umberto_Cimmino_CV.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
 
             // Reset UI after CSS animation finishes (7s)
             setTimeout(() => {
                 cvCheckbox.checked = false;
-                gsap.to(resBlock, { opacity: 0, duration: 0.5, onComplete: () => {
-                    resBlock.style.display = 'none';
-                    resBlock.style.opacity = 1;
-                }});
             }, 7000);
         });
     }

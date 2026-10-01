@@ -202,60 +202,42 @@
                         </div>
                     </div>
 
-                    <!-- NEW API-STYLE CV DOWNLOAD -->
-                    <div class="api-module">
-                        <h2 class="huge-text">RESUME.API</h2>
+                    <!-- 3D HOLOGRAPHIC CV CARD -->
+                    <div class="cv-showcase">
+                        <h2 class="huge-text">GET MY CV</h2>
                         
-                        <div class="api-window">
-                            <div class="api-top">
-                                <div class="api-dots">
-                                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                        <div class="cv-card-wrapper" id="cv-card-wrapper">
+                            <div class="cv-card" id="cv-card">
+                                <div class="cv-glare" id="cv-glare"></div>
+                                
+                                <div class="cv-card-top">
+                                    <div class="cv-chip"></div>
+                                    <span class="cv-id">ACCESS: VERIFIED</span>
                                 </div>
-                                <div class="api-tab">request.json</div>
-                            </div>
-                            
-                            <div class="api-content">
-                                <div class="api-req-line">
-                                    <span class="http-method">GET</span> 
-                                    <span class="http-url">/api/v1/umberto/cv.pdf</span> 
-                                    <span class="http-protocol">HTTP/1.1</span>
+                                
+                                <div class="cv-card-body">
+                                    <h3>UMBERTO CIMMINO</h3>
+                                    <p>Digital Curriculum Vitae &middot; 2026</p>
                                 </div>
-                                <div class="api-code">
-<pre><code>{
-  <span class="json-key">"headers"</span>: {
-    <span class="json-key">"Authorization"</span>: <span class="json-string">"Bearer guest_token"</span>,
-    <span class="json-key">"Accept"</span>: <span class="json-string">"application/pdf"</span>
-  }
-}</code></pre>
-                                </div>
-                            </div>
-                            
-                            <div class="api-divider"></div>
-                            
-                            <div class="api-action-row">
-                                <span class="api-hint">// Initialize payload extraction</span>
-                                <div class="download-container">
-                                    <label class="download-label" id="cv-download-label">
-                                        <input type="checkbox" class="download-input" id="cv-download-checkbox" />
-                                        <span class="download-circle">
-                                            <svg class="download-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19V5m0 14-4-4m4 4 4-4" />
-                                            </svg>
-                                            <div class="download-square"></div>
-                                        </span>
-                                        <p class="download-title">Fetch()</p>
-                                        <p class="download-title">200 OK</p>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="api-response" id="api-response-block" style="display: none;">
-                                <div class="api-res-line">
-                                    <span class="http-status">200 OK</span> 
-                                    <span class="res-time">142ms</span>
-                                </div>
-                                <div class="api-code">
-                                    <pre><code id="api-response-text"></code></pre>
+                                
+                                <div class="cv-card-footer">
+                                    <div class="cv-barcode">
+                                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                                    </div>
+                                    
+                                    <div class="download-container">
+                                        <label class="download-label" id="cv-download-label">
+                                            <input type="checkbox" class="download-input" id="cv-download-checkbox" />
+                                            <span class="download-circle">
+                                                <svg class="download-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19V5m0 14-4-4m4 4 4-4" />
+                                                </svg>
+                                                <div class="download-square"></div>
+                                            </span>
+                                            <p class="download-title">Download</p>
+                                            <p class="download-title">Done ✓</p>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
