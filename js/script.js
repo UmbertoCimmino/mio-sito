@@ -425,24 +425,44 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             animate();
 
+            // Multi-Stage Teleport Sequence (Image Sequence Zoom)
+            const zoomItaly = document.getElementById('zoom-italy');
+            const zoomCampania = document.getElementById('zoom-campania');
+
             const tl = gsap.timeline();
             
-            tl.to(targetUI, { opacity: 1, duration: 0.5 }, 0.5)
-              .call(() => { targetText.innerText = "ITALY"; }, null, 1.5)
-              .to(camera.position, { z: 35, duration: 2, ease: "power2.inOut" }, 1.5)
-              .to(earthGroup.rotation, { x: 0.6, y: -Math.PI/2 + 0.26, duration: 2, ease: "power2.inOut" }, 1.5)
+            // 0. Show Targeting UI
+            tl.to(targetUI, { display: 'flex', opacity: 1, duration: 0.5 }, 0)
               
-              .call(() => { targetText.innerText = "CAMPANIA"; }, null, 4)
-              .to(camera.position, { z: 20, duration: 1.5, ease: "power2.inOut" }, 4)
+              // 1. Initial 3D Zoom (WORLD -> ITALY view)
+              .call(() => { targetText.innerText = "ITALY"; }, null, 1)
+              .to(camera.position, { z: 25, duration: 2, ease: "power2.inOut" }, 1)
+              .to(earthGroup.rotation, { x: 0.6, y: -Math.PI/2 + 0.26, duration: 2, ease: "power2.inOut" }, 1)
               
-              .call(() => { targetText.innerText = "SALERNO"; }, null, 6)
-              .to(camera.position, { z: 15.1, duration: 1.5, ease: "power3.in" }, 6)
-              .to(targetUI, { opacity: 0, duration: 0.3 }, 7.2)
+              // 1.5 Flash and swap to High-Res Italy Image
+              .to(warpFlash, { opacity: 1, duration: 0.1 }, 2.8)
+              .set(zoomItaly, { opacity: 1 })
+              .to(warpFlash, { opacity: 0, duration: 0.3 }, 2.9)
+              .to(zoomItaly, { scale: 3, duration: 2, ease: "power1.inOut" }, 2.9)
               
-              .to(warpFlash, { opacity: 1, duration: 0.15, ease: "power1.in" }, 7.35)
+              // 2. Flash and swap to High-Res Campania Image
+              .call(() => { targetText.innerText = "CAMPANIA"; }, null, 4.7)
+              .to(warpFlash, { opacity: 1, duration: 0.1 }, 4.7)
+              .set(zoomCampania, { opacity: 1 })
+              .set(zoomItaly, { opacity: 0 })
+              .to(warpFlash, { opacity: 0, duration: 0.3 }, 4.8)
+              .to(zoomCampania, { scale: 3, duration: 2, ease: "power2.in" }, 4.8)
               
+              // 3. Zoom to Salerno (Final Crash)
+              .call(() => { targetText.innerText = "SALERNO"; }, null, 6.6)
+              .to(targetUI, { opacity: 0, duration: 0.2 }, 6.7)
+              .to(warpFlash, { opacity: 1, duration: 0.15, ease: "power1.in" }, 6.8)
+              
+              // 4. Reveal Salerno Mini-Site
               .call(() => {
                   earthContainer.style.display = 'none';
+                  zoomItaly.style.display = 'none';
+                  zoomCampania.style.display = 'none';
                   salernoContent.style.display = 'block';
                   gsap.set(salernoContent, { opacity: 1 });
                   cancelAnimationFrame(animId);
@@ -462,6 +482,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     salernoOverlay.style.pointerEvents = 'none';
                     salernoContent.style.display = 'none';
                     earthContainer.style.display = 'block';
+                    
+                    // Reset zoom layers for next time
+                    if(zoomItaly) {
+                        zoomItaly.style.display = 'block';
+                        gsap.set(zoomItaly, { opacity: 0, scale: 1 });
+                    }
+                    if(zoomCampania) {
+                        zoomCampania.style.display = 'block';
+                        gsap.set(zoomCampania, { opacity: 0, scale: 1 });
+                    }
                 }
             });
         });
