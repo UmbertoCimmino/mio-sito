@@ -327,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
     // ─── 11. IMMERSIVE SALERNO TELEPORTATION (PHOTOREALISTIC) ───
     const salernoTrigger = document.getElementById('salerno-trigger');
     const salernoOverlay = document.getElementById('salerno-overlay');
@@ -336,13 +337,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeSalerno = document.getElementById('close-salerno');
     const targetUI = document.getElementById('targeting-ui');
     const targetText = document.getElementById('target-text');
+    const zoomItaly = document.getElementById('zoom-italy');
+    const zoomCampania = document.getElementById('zoom-campania');
 
     if (salernoTrigger && salernoOverlay) {
-        let scene, camera, renderer, earthGroup, earthMesh, cloudsMesh;
+        let scene, camera, renderer, earthGroup, earthMesh, cloudsMesh, stars;
         let isTeleporting = false;
         let animId;
+        let isEarthInitialized = false;
 
-        function initEarth() {
+        function initEarth(onReadyCallback) {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 80;
@@ -353,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
             earthContainer.innerHTML = '';
             earthContainer.appendChild(renderer.domElement);
 
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
             scene.add(ambientLight);
             const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
             dirLight.position.set(50, 20, 30);
@@ -362,13 +366,27 @@ document.addEventListener("DOMContentLoaded", () => {
             earthGroup = new THREE.Group();
             scene.add(earthGroup);
 
-            const textureLoader = new THREE.TextureLoader();
+            // Create loading manager
+            const manager = new THREE.LoadingManager();
+            manager.onLoad = function () {
+                isEarthInitialized = true;
+                if (onReadyCallback) onReadyCallback();
+            };
+            manager.onError = function () {
+                console.error("Error loading Earth textures. Falling back.");
+                if (onReadyCallback) onReadyCallback();
+            };
+
+            const textureLoader = new THREE.TextureLoader(manager);
             const earthMap = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
             const earthBump = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-topology.png');
             const earthClouds = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-clouds1024.png');
 
             const sphereGeo = new THREE.SphereGeometry(15, 64, 64);
+            
+            // Fallback color so it doesn't stay black while loading
             const earthMat = new THREE.MeshPhongMaterial({ 
+                color: 0x1133aa,
                 map: earthMap,
                 bumpMap: earthBump,
                 bumpScale: 0.2,
@@ -397,11 +415,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             starGeo.setAttribute('position', new THREE.BufferAttribute(starArr, 3));
             const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0.8 });
-            const stars = new THREE.Points(starGeo, starMat);
+            stars = new THREE.Points(starGeo, starMat);
             scene.add(stars);
 
-            earthGroup.rotation.y = -Math.PI / 2 + 0.3; 
-            earthGroup.rotation.x = 0.5;
+            // Setup initial view (showing Europe/Africa initially)
+            earthGroup.rotation.y = 0; 
+            earthGroup.rotation.x = 0.2;
         }
 
         salernoTrigger.addEventListener('click', () => {
@@ -411,66 +430,76 @@ document.addEventListener("DOMContentLoaded", () => {
             salernoOverlay.style.display = 'block';
             gsap.to(salernoOverlay, { opacity: 1, duration: 0.3 });
             salernoOverlay.style.pointerEvents = 'auto';
-
-            initEarth();
             
             // Reset UI
-            targetText.innerText = "WORLD";
-            gsap.set(targetUI, { display: 'flex', opacity: 0 });
+            targetText.innerText = "LOADING ASSETS...";
+            gsap.set(targetUI, { display: 'flex', opacity: 1 });
 
-            const animate = function () {
-                animId = requestAnimationFrame(animate);
-                cloudsMesh.rotation.y += 0.0005;
-                renderer.render(scene, camera);
-            };
-            animate();
+            initEarth(() => {
+                // This runs when textures are loaded
+                targetText.innerText = "WORLD";
+                
+                const animate = function () {
+                    animId = requestAnimationFrame(animate);
+                    // Continuous rotation for clouds and stars
+                    if (cloudsMesh) cloudsMesh.rotation.y += 0.0005;
+                    if (stars) {
+                        stars.rotation.y -= 0.0002;
+                        stars.rotation.x += 0.0001;
+                    }
+                    // Rotate earth slowly before GSAP takes over
+                    if (earthGroup && !gsap.isTweening(earthGroup.rotation)) {
+                        earthGroup.rotation.y += 0.002;
+                    }
+                    renderer.render(scene, camera);
+                };
+                animate();
 
-            // Multi-Stage Teleport Sequence (Image Sequence Zoom)
-            const zoomItaly = document.getElementById('zoom-italy');
-            const zoomCampania = document.getElementById('zoom-campania');
-
-            const tl = gsap.timeline();
-            
-            // 0. Show Targeting UI
-            tl.to(targetUI, { display: 'flex', opacity: 1, duration: 0.5 }, 0)
-              
-              // 1. Initial 3D Zoom (WORLD -> ITALY view)
-              .call(() => { targetText.innerText = "ITALY"; }, null, 1)
-              .to(camera.position, { z: 25, duration: 2, ease: "power2.inOut" }, 1)
-              .to(earthGroup.rotation, { x: 0.6, y: -Math.PI/2 + 0.26, duration: 2, ease: "power2.inOut" }, 1)
-              
-              // 1.5 Flash and swap to High-Res Italy Image
-              .to(warpFlash, { opacity: 1, duration: 0.1 }, 2.8)
-              .set(zoomItaly, { opacity: 1 })
-              .to(warpFlash, { opacity: 0, duration: 0.3 }, 2.9)
-              .to(zoomItaly, { scale: 3, duration: 2, ease: "power1.inOut" }, 2.9)
-              
-              // 2. Flash and swap to High-Res Campania Image
-              .call(() => { targetText.innerText = "CAMPANIA"; }, null, 4.7)
-              .to(warpFlash, { opacity: 1, duration: 0.1 }, 4.7)
-              .set(zoomCampania, { opacity: 1 })
-              .set(zoomItaly, { opacity: 0 })
-              .to(warpFlash, { opacity: 0, duration: 0.3 }, 4.8)
-              .to(zoomCampania, { scale: 3, duration: 2, ease: "power2.in" }, 4.8)
-              
-              // 3. Zoom to Salerno (Final Crash)
-              .call(() => { targetText.innerText = "SALERNO"; }, null, 6.6)
-              .to(targetUI, { opacity: 0, duration: 0.2 }, 6.7)
-              .to(warpFlash, { opacity: 1, duration: 0.15, ease: "power1.in" }, 6.8)
-              
-              // 4. Reveal Salerno Mini-Site
-              .call(() => {
-                  earthContainer.style.display = 'none';
-                  zoomItaly.style.display = 'none';
-                  zoomCampania.style.display = 'none';
-                  salernoContent.style.display = 'block';
-                  gsap.set(salernoContent, { opacity: 1 });
-                  cancelAnimationFrame(animId);
-              })
-              .to(warpFlash, { opacity: 0, duration: 1.5, ease: "power2.out" })
-              .call(() => {
-                  isTeleporting = false;
-              });
+                // Build GSAP Timeline
+                const tl = gsap.timeline();
+                
+                // Let the earth spin naturally for a second before zooming
+                tl.to({}, { duration: 1 })
+                  
+                  // 1. Initial 3D Zoom (WORLD -> ITALY view)
+                  .call(() => { targetText.innerText = "ITALY"; })
+                  // Target rotation for Italy: Lat ~40, Lon ~15
+                  .to(camera.position, { z: 25, duration: 2, ease: "power2.inOut" }, "+=0")
+                  .to(earthGroup.rotation, { x: 0.6, y: -Math.PI/2 + 0.26, duration: 2, ease: "power2.inOut" }, "-=2")
+                  
+                  // 1.5 Flash and swap to High-Res Italy Image
+                  .to(warpFlash, { opacity: 1, duration: 0.1 }, "+=0.2")
+                  .set(zoomItaly, { opacity: 1 })
+                  .to(warpFlash, { opacity: 0, duration: 0.3 })
+                  .to(zoomItaly, { scale: 3, duration: 2, ease: "power1.inOut" }, "-=0.3")
+                  
+                  // 2. Flash and swap to High-Res Campania Image
+                  .call(() => { targetText.innerText = "CAMPANIA"; })
+                  .to(warpFlash, { opacity: 1, duration: 0.1 }, "-=0.2")
+                  .set(zoomCampania, { opacity: 1 })
+                  .set(zoomItaly, { opacity: 0 })
+                  .to(warpFlash, { opacity: 0, duration: 0.3 })
+                  .to(zoomCampania, { scale: 3, duration: 2, ease: "power2.in" }, "-=0.3")
+                  
+                  // 3. Zoom to Salerno (Final Crash)
+                  .call(() => { targetText.innerText = "SALERNO"; })
+                  .to(targetUI, { opacity: 0, duration: 0.2 })
+                  .to(warpFlash, { opacity: 1, duration: 0.15, ease: "power1.in" })
+                  
+                  // 4. Reveal Salerno Mini-Site
+                  .call(() => {
+                      earthContainer.style.display = 'none';
+                      zoomItaly.style.display = 'none';
+                      zoomCampania.style.display = 'none';
+                      salernoContent.style.display = 'block';
+                      gsap.set(salernoContent, { opacity: 1 });
+                      cancelAnimationFrame(animId);
+                  })
+                  .to(warpFlash, { opacity: 0, duration: 1.5, ease: "power2.out" })
+                  .call(() => {
+                      isTeleporting = false;
+                  });
+            });
         });
 
         closeSalerno.addEventListener('click', () => {
@@ -497,4 +526,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-});
+}); // DOMContentLoaded end
