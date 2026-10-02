@@ -325,4 +325,124 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-});
+
+    // ─── 11. IMMERSIVE SALERNO TELEPORTATION ───
+    const salernoTrigger = document.getElementById('salerno-trigger');
+    const salernoOverlay = document.getElementById('salerno-overlay');
+    const earthContainer = document.getElementById('earth-container');
+    const warpFlash = document.getElementById('warp-flash');
+    const salernoContent = document.getElementById('salerno-content');
+    const closeSalerno = document.getElementById('close-salerno');
+
+    if (salernoTrigger && salernoOverlay) {
+        let scene, camera, renderer, earthGroup, stars;
+        let isTeleporting = false;
+        let animId;
+
+        function initEarth() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 100;
+
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            earthContainer.innerHTML = '';
+            earthContainer.appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(50, 50, 50);
+            scene.add(pointLight);
+
+            earthGroup = new THREE.Group();
+            scene.add(earthGroup);
+
+            // Techy wireframe globe
+            const sphereGeo = new THREE.SphereGeometry(15, 32, 32);
+            const sphereMat = new THREE.MeshBasicMaterial({ 
+                color: 0x4ade80, 
+                wireframe: true, 
+                transparent: true, 
+                opacity: 0.2 
+            });
+            const earth = new THREE.Mesh(sphereGeo, sphereMat);
+            earthGroup.add(earth);
+            
+            // Pin for Italy/Salerno
+            const pinGeo = new THREE.SphereGeometry(0.3, 16, 16);
+            const pinMat = new THREE.MeshBasicMaterial({ color: 0xc8f135 });
+            const pin = new THREE.Mesh(pinGeo, pinMat);
+            
+            const phi = (90 - 40.68) * (Math.PI / 180);
+            const theta = (14.76 + 180) * (Math.PI / 180);
+            pin.position.x = -(15 * Math.sin(phi) * Math.cos(theta));
+            pin.position.z = (15 * Math.sin(phi) * Math.sin(theta));
+            pin.position.y = 15 * Math.cos(phi);
+            earthGroup.add(pin);
+
+            // Stars
+            const starGeo = new THREE.BufferGeometry();
+            const starCount = 3000;
+            const starArr = new Float32Array(starCount * 3);
+            for(let i=0; i < starCount * 3; i++) {
+                starArr[i] = (Math.random() - 0.5) * 400;
+            }
+            starGeo.setAttribute('position', new THREE.BufferAttribute(starArr, 3));
+            const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0.8 });
+            stars = new THREE.Points(starGeo, starMat);
+            scene.add(stars);
+
+            earthGroup.rotation.y = -Math.PI / 2;
+        }
+
+        salernoTrigger.addEventListener('click', () => {
+            if (isTeleporting) return;
+            isTeleporting = true;
+            
+            salernoOverlay.style.display = 'block';
+            gsap.to(salernoOverlay, { opacity: 1, duration: 0.3 });
+            salernoOverlay.style.pointerEvents = 'auto';
+
+            initEarth();
+
+            const animate = function () {
+                animId = requestAnimationFrame(animate);
+                stars.rotation.y -= 0.002;
+                stars.rotation.x += 0.001;
+                renderer.render(scene, camera);
+            };
+            animate();
+
+            const tl = gsap.timeline();
+            
+            tl.to(earthGroup.rotation, { y: earthGroup.rotation.y - Math.PI * 4.5, x: 0.2, duration: 3.5, ease: "power2.inOut" }, 0)
+              .to(camera.position, { z: 15.5, duration: 3.5, ease: "power2.in" }, 0)
+              .to(warpFlash, { opacity: 1, duration: 0.15, ease: "power1.in" }, "-=0.2")
+              .call(() => {
+                  earthContainer.style.display = 'none';
+                  salernoContent.style.display = 'block';
+                  gsap.set(salernoContent, { opacity: 1 });
+                  cancelAnimationFrame(animId);
+              })
+              .to(warpFlash, { opacity: 0, duration: 1.5, ease: "power2.out" })
+              .call(() => {
+                  isTeleporting = false;
+              });
+        });
+
+        closeSalerno.addEventListener('click', () => {
+            gsap.to(salernoOverlay, {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: () => {
+                    salernoOverlay.style.display = 'none';
+                    salernoOverlay.style.pointerEvents = 'none';
+                    salernoContent.style.display = 'none';
+                    earthContainer.style.display = 'block';
+                }
+            });
+        });
+    }
+
+}); // Keep closing bracket for document.addEventListener("DOMContentLoaded", () => {

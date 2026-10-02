@@ -91,7 +91,7 @@
                         </div>
                         <div class="detail-item">
                             <span class="d-label">Location</span>
-                            <span class="d-value location-value">
+                            <span class="d-value location-value clickable" id="salerno-trigger">
                                 <span class="radar-ping"></span>
                                 Salerno, Campania, Italia
                             </span>
@@ -336,7 +336,55 @@
         </div>
     </main>
 
+    <!-- SALERNO IMMERSIVE OVERLAY -->
+    <div id="salerno-overlay" class="salerno-overlay">
+        <!-- White Flash for Transition -->
+        <div id="warp-flash" class="warp-flash"></div>
+        
+        <!-- ThreeJS Earth Container -->
+        <div id="earth-container" class="earth-container"></div>
+        
+        <!-- Salerno Showcase Content -->
+        <div id="salerno-content" class="salerno-content">
+            <button id="close-salerno" class="close-salerno">
+                <span class="t-char">[</span> ESCI DALLA SIMULAZIONE <span class="t-char">]</span>
+            </button>
+            
+            <div class="salerno-hero">
+                <video autoplay muted loop playsinline class="salerno-vid">
+                    <!-- High quality drone video of coastline -->
+                    <source src="https://cdn.pixabay.com/video/2020/07/22/45388-442880011_large.mp4" type="video/mp4">
+                </video>
+                <div class="salerno-vid-overlay"></div>
+                
+                <div class="salerno-glass-panel">
+                    <h1 class="salerno-title">SALERNO</h1>
+                    <p class="salerno-subtitle">Tech Hub &middot; Costiera Amalfitana &middot; Innovazione</p>
+                    
+                    <div class="salerno-features">
+                        <div class="sf-card">
+                            <div class="sf-icon">💻</div>
+                            <h3>Tech Ecosystem</h3>
+                            <p>Sede del prestigioso campus UNISA. Un ecosistema in forte crescita per l'innovazione software nel Sud Italia.</p>
+                        </div>
+                        <div class="sf-card">
+                            <div class="sf-icon">🌊</div>
+                            <h3>Lifestyle Unico</h3>
+                            <p>Scrivere codice con la brezza marina. La perfetta unione tra work-life balance e la bellezza della Costiera Amalfitana.</p>
+                        </div>
+                        <div class="sf-card">
+                            <div class="sf-icon">🚀</div>
+                            <h3>Nuove Opportunità</h3>
+                            <p>Hub emergente per startup digitali, nomadi digitali e talenti STEM pronti a rivoluzionare il mercato tech.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/split-type"></script>
