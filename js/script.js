@@ -326,62 +326,69 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // ─── 11. IMMERSIVE SALERNO TELEPORTATION ───
+
+    // ─── 11. IMMERSIVE SALERNO TELEPORTATION (PHOTOREALISTIC) ───
     const salernoTrigger = document.getElementById('salerno-trigger');
     const salernoOverlay = document.getElementById('salerno-overlay');
     const earthContainer = document.getElementById('earth-container');
     const warpFlash = document.getElementById('warp-flash');
     const salernoContent = document.getElementById('salerno-content');
     const closeSalerno = document.getElementById('close-salerno');
+    const targetUI = document.getElementById('targeting-ui');
+    const targetText = document.getElementById('target-text');
 
     if (salernoTrigger && salernoOverlay) {
-        let scene, camera, renderer, earthGroup, stars;
+        let scene, camera, renderer, earthGroup, earthMesh, cloudsMesh;
         let isTeleporting = false;
         let animId;
 
         function initEarth() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 100;
+            camera.position.z = 80;
 
             renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             earthContainer.innerHTML = '';
             earthContainer.appendChild(renderer.domElement);
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
             scene.add(ambientLight);
-            const pointLight = new THREE.PointLight(0xffffff, 1);
-            pointLight.position.set(50, 50, 50);
-            scene.add(pointLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+            dirLight.position.set(50, 20, 30);
+            scene.add(dirLight);
 
             earthGroup = new THREE.Group();
             scene.add(earthGroup);
 
-            // Techy wireframe globe
-            const sphereGeo = new THREE.SphereGeometry(15, 32, 32);
-            const sphereMat = new THREE.MeshBasicMaterial({ 
-                color: 0x4ade80, 
-                wireframe: true, 
-                transparent: true, 
-                opacity: 0.2 
-            });
-            const earth = new THREE.Mesh(sphereGeo, sphereMat);
-            earthGroup.add(earth);
-            
-            // Pin for Italy/Salerno
-            const pinGeo = new THREE.SphereGeometry(0.3, 16, 16);
-            const pinMat = new THREE.MeshBasicMaterial({ color: 0xc8f135 });
-            const pin = new THREE.Mesh(pinGeo, pinMat);
-            
-            const phi = (90 - 40.68) * (Math.PI / 180);
-            const theta = (14.76 + 180) * (Math.PI / 180);
-            pin.position.x = -(15 * Math.sin(phi) * Math.cos(theta));
-            pin.position.z = (15 * Math.sin(phi) * Math.sin(theta));
-            pin.position.y = 15 * Math.cos(phi);
-            earthGroup.add(pin);
+            const textureLoader = new THREE.TextureLoader();
+            const earthMap = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
+            const earthBump = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-topology.png');
+            const earthClouds = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-clouds1024.png');
 
-            // Stars
+            const sphereGeo = new THREE.SphereGeometry(15, 64, 64);
+            const earthMat = new THREE.MeshPhongMaterial({ 
+                map: earthMap,
+                bumpMap: earthBump,
+                bumpScale: 0.2,
+                specular: new THREE.Color(0x333333),
+                shininess: 15
+            });
+            earthMesh = new THREE.Mesh(sphereGeo, earthMat);
+            earthGroup.add(earthMesh);
+            
+            const cloudGeo = new THREE.SphereGeometry(15.2, 64, 64);
+            const cloudMat = new THREE.MeshPhongMaterial({
+                map: earthClouds,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+                side: THREE.DoubleSide
+            });
+            cloudsMesh = new THREE.Mesh(cloudGeo, cloudMat);
+            earthGroup.add(cloudsMesh);
+            
             const starGeo = new THREE.BufferGeometry();
             const starCount = 3000;
             const starArr = new Float32Array(starCount * 3);
@@ -390,10 +397,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             starGeo.setAttribute('position', new THREE.BufferAttribute(starArr, 3));
             const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0.8 });
-            stars = new THREE.Points(starGeo, starMat);
+            const stars = new THREE.Points(starGeo, starMat);
             scene.add(stars);
 
-            earthGroup.rotation.y = -Math.PI / 2;
+            earthGroup.rotation.y = -Math.PI / 2 + 0.3; 
+            earthGroup.rotation.x = 0.5;
         }
 
         salernoTrigger.addEventListener('click', () => {
@@ -405,20 +413,34 @@ document.addEventListener("DOMContentLoaded", () => {
             salernoOverlay.style.pointerEvents = 'auto';
 
             initEarth();
+            
+            // Reset UI
+            targetText.innerText = "WORLD";
+            gsap.set(targetUI, { display: 'flex', opacity: 0 });
 
             const animate = function () {
                 animId = requestAnimationFrame(animate);
-                stars.rotation.y -= 0.002;
-                stars.rotation.x += 0.001;
+                cloudsMesh.rotation.y += 0.0005;
                 renderer.render(scene, camera);
             };
             animate();
 
             const tl = gsap.timeline();
             
-            tl.to(earthGroup.rotation, { y: earthGroup.rotation.y - Math.PI * 4.5, x: 0.2, duration: 3.5, ease: "power2.inOut" }, 0)
-              .to(camera.position, { z: 15.5, duration: 3.5, ease: "power2.in" }, 0)
-              .to(warpFlash, { opacity: 1, duration: 0.15, ease: "power1.in" }, "-=0.2")
+            tl.to(targetUI, { opacity: 1, duration: 0.5 }, 0.5)
+              .call(() => { targetText.innerText = "ITALY"; }, null, 1.5)
+              .to(camera.position, { z: 35, duration: 2, ease: "power2.inOut" }, 1.5)
+              .to(earthGroup.rotation, { x: 0.6, y: -Math.PI/2 + 0.26, duration: 2, ease: "power2.inOut" }, 1.5)
+              
+              .call(() => { targetText.innerText = "CAMPANIA"; }, null, 4)
+              .to(camera.position, { z: 20, duration: 1.5, ease: "power2.inOut" }, 4)
+              
+              .call(() => { targetText.innerText = "SALERNO"; }, null, 6)
+              .to(camera.position, { z: 15.1, duration: 1.5, ease: "power3.in" }, 6)
+              .to(targetUI, { opacity: 0, duration: 0.3 }, 7.2)
+              
+              .to(warpFlash, { opacity: 1, duration: 0.15, ease: "power1.in" }, 7.35)
+              
               .call(() => {
                   earthContainer.style.display = 'none';
                   salernoContent.style.display = 'block';
@@ -445,4 +467,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-}); // Keep closing bracket for document.addEventListener("DOMContentLoaded", () => {
+});

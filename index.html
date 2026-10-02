@@ -338,44 +338,92 @@
 
     <!-- SALERNO IMMERSIVE OVERLAY -->
     <div id="salerno-overlay" class="salerno-overlay">
+        
+        <!-- UI Targeting Interface during Zoom -->
+        <div id="targeting-ui" class="targeting-ui">
+            <div class="target-bracket">[</div>
+            <div class="target-content">
+                <span class="target-label">SYSTEM_CALIBRATION</span>
+                <span id="target-text" class="target-text">WORLD</span>
+            </div>
+            <div class="target-bracket">]</div>
+        </div>
+
         <!-- White Flash for Transition -->
         <div id="warp-flash" class="warp-flash"></div>
         
         <!-- ThreeJS Earth Container -->
         <div id="earth-container" class="earth-container"></div>
         
-        <!-- Salerno Showcase Content -->
+        <!-- Salerno Showcase Content (The Mini-Site) -->
         <div id="salerno-content" class="salerno-content">
             <button id="close-salerno" class="close-salerno">
-                <span class="t-char">[</span> ESCI DALLA SIMULAZIONE <span class="t-char">]</span>
+                <span class="t-char">&lt;</span> BACK TO CV
             </button>
             
-            <div class="salerno-hero">
-                <video autoplay muted loop playsinline class="salerno-vid">
-                    <!-- High quality drone video of coastline -->
-                    <source src="https://cdn.pixabay.com/video/2020/07/22/45388-442880011_large.mp4" type="video/mp4">
-                </video>
-                <div class="salerno-vid-overlay"></div>
-                
-                <div class="salerno-glass-panel">
-                    <h1 class="salerno-title">SALERNO</h1>
-                    <p class="salerno-subtitle">Tech Hub &middot; Costiera Amalfitana &middot; Innovazione</p>
-                    
-                    <div class="salerno-features">
-                        <div class="sf-card">
-                            <div class="sf-icon">💻</div>
-                            <h3>Tech Ecosystem</h3>
-                            <p>Sede del prestigioso campus UNISA. Un ecosistema in forte crescita per l'innovazione software nel Sud Italia.</p>
+            <div class="salerno-scroller">
+                <!-- HERO SECTION -->
+                <div class="s-hero">
+                    <img src="https://images.unsplash.com/photo-1533674689012-136b487b7736?auto=format&fit=crop&w=2560&q=80" class="s-hero-bg" alt="Salerno Coast">
+                    <div class="s-hero-overlay"></div>
+                    <div class="s-hero-text">
+                        <h1 class="s-huge-title">SALERNO</h1>
+                        <p class="s-subtitle">WHERE HERITAGE MEETS INNOVATION</p>
+                    </div>
+                    <div class="s-scroll-indicator">
+                        <span>EXPLORE</span>
+                        <div class="s-line"></div>
+                    </div>
+                </div>
+
+                <!-- CITY PRESENTATION -->
+                <div class="s-section s-city">
+                    <div class="s-grid">
+                        <div class="s-text-col">
+                            <h2 class="s-section-title">THE CITY</h2>
+                            <p class="s-desc">
+                                Incastonata tra la Divina Costiera Amalfitana e il Cilento, Salerno è un gioiello del Mediterraneo. 
+                                Una città dove la storia millenaria della Scuola Medica Salernitana si respira tra i vicoli del centro storico, fondendosi armoniosamente con un lungomare moderno e vibrante.
+                            </p>
+                            <p class="s-desc">
+                                Non è solo una meta turistica di fama mondiale, ma un luogo dove la qualità della vita raggiunge l'eccellenza. Il clima perfetto, la cultura del buon cibo e la vicinanza al mare offrono uno stile di vita introvabile nelle classiche metropoli grigie.
+                            </p>
                         </div>
-                        <div class="sf-card">
-                            <div class="sf-icon">🌊</div>
-                            <h3>Lifestyle Unico</h3>
-                            <p>Scrivere codice con la brezza marina. La perfetta unione tra work-life balance e la bellezza della Costiera Amalfitana.</p>
+                        <div class="s-img-col s-interactive-gallery">
+                            <div class="s-img-wrap s-img-1">
+                                <img src="https://images.unsplash.com/photo-1572085313466-6710de8d7ba3?auto=format&fit=crop&w=800&q=80" alt="Amalfi Coast View">
+                            </div>
+                            <div class="s-img-wrap s-img-2">
+                                <img src="https://images.unsplash.com/photo-1552083974-186346191183?auto=format&fit=crop&w=800&q=80" alt="Italian Streets">
+                            </div>
                         </div>
-                        <div class="sf-card">
-                            <div class="sf-icon">🚀</div>
-                            <h3>Nuove Opportunità</h3>
-                            <p>Hub emergente per startup digitali, nomadi digitali e talenti STEM pronti a rivoluzionare il mercato tech.</p>
+                    </div>
+                </div>
+
+                <!-- TECH HUB & OPPORTUNITIES -->
+                <div class="s-section s-tech">
+                    <div class="s-grid s-grid-reverse">
+                        <div class="s-text-col">
+                            <h2 class="s-section-title">THE TECH HUB</h2>
+                            <p class="s-desc">
+                                Lontano dai ritmi alienanti, Salerno sta emergendo come un nuovo fulcro per l'ecosistema digitale italiano. 
+                                Sede del campus <strong>UNISA</strong> (Università degli Studi di Salerno), uno dei poli universitari più grandi e all'avanguardia del Sud Italia, la città sforna continuamente talenti STEM di altissimo livello.
+                            </p>
+                            <ul class="s-tech-list">
+                                <li>
+                                    <strong>🚀 Startup Ecosystem:</strong> Incubatori e spazi di coworking stanno trasformando le idee in realtà aziendali.
+                                </li>
+                                <li>
+                                    <strong>💻 Digital Nomadism:</strong> Fibra ottica ad alta velocità combinata con affitti accessibili e vista mare. Il paradiso del remote working.
+                                </li>
+                                <li>
+                                    <strong>🌐 Community:</strong> Meetup, eventi tech e hackathon che collegano studenti, professionisti e aziende internazionali.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="s-img-col s-tech-visual">
+                            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1000&q=80" alt="Code & Development">
+                            <div class="s-tech-glow"></div>
                         </div>
                     </div>
                 </div>
