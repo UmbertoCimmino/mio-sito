@@ -246,6 +246,78 @@ body.loading {
     color: var(--text);
 }
 
+/* ── ABOUT ME ENHANCEMENTS ── */
+.unisa-link {
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+.unisa-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 0%; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+.unisa-link:hover {
+    text-shadow: 0 0 10px rgba(200, 241, 53, 0.5);
+}
+.unisa-link:hover::after {
+    width: 100%;
+}
+.ext-link-icon {
+    width: 14px;
+    height: 14px;
+}
+.diploma-value {
+    display: inline-flex;
+    align-items: baseline;
+}
+.grade-counter {
+    color: var(--text);
+    font-weight: bold;
+    display: inline-block;
+    min-width: 2ch;
+    text-align: right;
+    transition: color 0.3s;
+}
+.grade-counter.max {
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(200, 241, 53, 0.4);
+}
+.location-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.radar-ping {
+    position: relative;
+    width: 8px; height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    display: inline-block;
+}
+.radar-ping::before {
+    content: '';
+    position: absolute;
+    top: -4px; left: -4px;
+    right: -4px; bottom: -4px;
+    border-radius: 50%;
+    border: 1px solid #4ade80;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes ping {
+    75%, 100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
 /* ── SKILLS ── */
 .skills {
     padding: 10vh 0;

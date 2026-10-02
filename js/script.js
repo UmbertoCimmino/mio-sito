@@ -125,6 +125,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
+    // ─── 4b. ABOUT DETAILS ANIMATIONS ───
+    const diplomaGrade = document.getElementById('diploma-grade');
+    if (diplomaGrade) {
+        let gradeProxy = { val: 0 };
+        ScrollTrigger.create({
+            trigger: '.about-details',
+            start: 'top 85%',
+            once: true,
+            onEnter: () => {
+                gsap.to(gradeProxy, {
+                    val: 100,
+                    duration: 2.5,
+                    ease: "power3.out",
+                    onUpdate: function() {
+                        diplomaGrade.innerText = Math.floor(gradeProxy.val);
+                    },
+                    onComplete: () => {
+                        diplomaGrade.classList.add('max');
+                    }
+                });
+            }
+        });
+    }
+
     // ─── 5. SKILLS MARQUEE ───
     gsap.to('.skills-marquee', {
         xPercent: -50,
@@ -161,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const terminalOutput = document.getElementById('t-output');
     if (terminalOutput) {
         const terminalLines = [
-            { text: "guest@umberto:~$ ./load_documents.sh", class: "t-msg", delay: 500 },
+            { text: "portafolio@guest:~$ ./load_documents.sh", class: "t-msg", delay: 500 },
             { text: "Loading modules...", class: "t-muted", delay: 400 },
             { text: "[WARN] Database connection slow...", class: "t-accent", delay: 800 },
             { text: "[ERROR] System msg: Sezione in fase di sviluppo.", class: "t-err", delay: 300 },
