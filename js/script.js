@@ -463,9 +463,12 @@ document.addEventListener("DOMContentLoaded", () => {
                   
                   // 1. Initial 3D Zoom (WORLD -> ITALY view)
                   .call(() => { targetText.innerText = "ITALY"; })
-                  // Target rotation for Italy: Lat ~40, Lon ~15
+                  // Salerno: Lat 40.7°N, Lon 14.8°E
+                  // Three.js SphereGeometry shows ~90°W at rotation.y=0
+                  // To show 14.8°E: rotation.y = -((14.8 + 90) * π/180) = -1.83
+                  // To tilt to 40.7°N: rotation.x = 40.7 * π/180 = 0.71
                   .to(camera.position, { z: 25, duration: 2, ease: "power2.inOut" }, "+=0")
-                  .to(earthGroup.rotation, { x: 0.6, y: -Math.PI/2 + 0.26, duration: 2, ease: "power2.inOut" }, "-=2")
+                  .to(earthGroup.rotation, { x: 0.71, y: -1.83, duration: 2, ease: "power2.inOut" }, "-=2")
                   
                   // 1.5 Flash and swap to High-Res Italy Image
                   .to(warpFlash, { opacity: 1, duration: 0.1 }, "+=0.2")
