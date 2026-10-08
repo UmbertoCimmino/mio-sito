@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/download-btn.css">
 </head>
 <body class="loading">
 
@@ -91,10 +90,16 @@
                         </div>
                         <div class="detail-item">
                             <span class="d-label">Location</span>
-                            <span class="d-value location-value clickable" id="salerno-trigger">
-                                <span class="radar-ping"></span>
-                                Salerno, Campania, Italia
-                            </span>
+                            <div class="location-group">
+                                <span class="location-name">Salerno, Campania, Italia</span>
+                                <button class="map-open-trigger" id="salerno-trigger" type="button" aria-label="Apri la mappa e avvia il viaggio verso Salerno">
+                                    <span class="radar-ping" aria-hidden="true"></span>
+                                    <span>OPEN MAP</span>
+                                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 12h13M12 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -196,68 +201,26 @@
                 <div class="container">
                     <div class="about-label">( 04. DOCUMENTS )</div>
                     
-                    <!-- TERMINAL WIP COMPONENT -->
-                    <div class="terminal-wip" id="wip-terminal">
-                        <div class="t-header">
-                            <div class="t-dots">
-                                <span class="dot red"></span>
-                                <span class="dot yellow"></span>
-                                <span class="dot green"></span>
-                            </div>
-                            <div class="t-title">bash -- documents</div>
-                        </div>
-                        <div class="t-body">
-                            <div id="t-output"></div>
-                            <div class="t-input-line">
-                                <span class="t-cursor">_</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3D HOLOGRAPHIC CV CARD -->
                     <div class="cv-showcase">
-                        <h2 class="section-title">DOCUMENTS</h2>
-                        
-                        <div class="cv-cards-grid">
-                            <!-- Card 1: CV -->
-                            <div class="cv-card-wrapper" id="cv-card-wrapper">
-                                <div class="cv-card" id="cv-card">
-                                    <div class="cv-glare" id="cv-glare"></div>
-                                    
-                                    <div class="cv-card-top">
-                                        <div class="cv-chip"></div>
-                                        <span class="cv-id">ID: 001</span>
-                                    </div>
-                                    
-                                    <div class="cv-card-body">
-                                        <h3>UMBERTO CIMMINO</h3>
-                                        <p>Curriculum Vitae</p>
-                                    </div>
-                                    
-                                    <div class="cv-card-footer">
-                                        <div class="cv-barcode">
-                                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                                        </div>
-                                        
-                                        <div class="download-container">
-                                            <label class="download-label" id="cv-download-label">
-                                                <input type="checkbox" class="download-input" id="cv-download-checkbox" />
-                                                <span class="download-circle">
-                                                    <svg class="download-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19V5m0 14-4-4m4 4 4-4" />
-                                                    </svg>
-                                                    <div class="download-square"></div>
-                                                </span>
-                                                <p class="download-title">Download</p>
-                                                <p class="download-title">Done ✓</p>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                        <article class="cv-download-card" aria-labelledby="cv-title">
+                            <div class="cv-file-icon" aria-hidden="true">
+                                <svg viewBox="0 0 32 40" fill="none">
+                                    <path d="M5 1.5h14l8 8V36a2.5 2.5 0 0 1-2.5 2.5h-19A2.5 2.5 0 0 1 3 36V4A2.5 2.5 0 0 1 5.5 1.5Z" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M19 2v8h8M8 21h14M8 27h14M8 33h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
                             </div>
-                            
-                            <!-- In the future, additional cards can be placed here -->
-                        </div>
+                            <div class="cv-document-copy">
+                                <span class="cv-eyebrow">DOCUMENTO PDF · ITALIANO</span>
+                                <h2 id="cv-title">Curriculum Vitae</h2>
+                                <p>Formazione, competenze ed esperienze in un unico documento.</p>
+                            </div>
+                            <a class="cv-download-link" href="documenti/Umberto_Cimmino_CV.pdf" download="Umberto_Cimmino_CV.pdf">
+                                <span>Scarica il PDF</span>
+                                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 3v12m0 0 5-5m-5 5-5-5M4 17v3h16v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </a>
+                        </article>
                     </div>
                 </div>
             </section>
@@ -338,37 +301,39 @@
 
     <!-- SALERNO IMMERSIVE OVERLAY -->
     <div id="salerno-overlay" class="salerno-overlay">
-        
-        <!-- UI Targeting Interface during Zoom -->
-        <div id="targeting-ui" class="targeting-ui">
-            <div class="target-bracket">[</div>
-            <div class="target-content">
-                <span class="target-label">SYSTEM_CALIBRATION</span>
-                <span id="target-text" class="target-text">WORLD</span>
+        <button id="close-salerno" class="close-salerno">
+            <span class="t-char">&lt;</span> BACK
+        </button>
+        <div id="salerno-map" class="salerno-map" aria-label="Mappa interattiva con viaggio verso Salerno"></div>
+        <section id="city-story" class="city-story" aria-live="polite" data-lenis-prevent="true"></section>
+        <section id="campus-view" class="campus-view" aria-label="Mappa interattiva del campus di Fisciano" data-lenis-prevent="true">
+            <div class="campus-map-frame">
+                <div id="campus-map-canvas" class="campus-map-canvas" role="application" aria-label="Mappa esplorabile del campus UNISA con strade reali e edifici selezionabili"></div>
             </div>
-            <div class="target-bracket">]</div>
+            <aside id="campus-info" class="campus-info" aria-live="polite" hidden></aside>
+            <div class="campus-controls" aria-label="Controlli mappa campus">
+                <button type="button" id="campus-zoom-in" aria-label="Ingrandisci">+</button>
+                <button type="button" id="campus-zoom-out" aria-label="Riduci">−</button>
+                <button type="button" id="campus-reset" aria-label="Reimposta mappa">↺</button>
+            </div>
+            <div class="campus-attribution">© OpenStreetMap · OpenFreeMap</div>
+        </section>
+        <div id="map-cursor" class="map-cursor" aria-hidden="true">
+            <span class="map-cursor-ring"><span class="map-cursor-center"></span></span>
+            <span id="map-cursor-label" class="map-cursor-label">DRAG MAP</span>
         </div>
-
-        <!-- Image Sequence for Realistic Zoom -->
-        <div id="zoom-italy" class="zoom-layer" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/e9/Italy_satellite_image.jpg');"></div>
-        <div id="zoom-campania" class="zoom-layer" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/69/Golfo_di_Napoli.jpg');"></div>
-
-        <!-- White Flash for Transition -->
-        <div id="warp-flash" class="warp-flash"></div>
-        
-        <!-- ThreeJS Earth Container -->
-        <div id="earth-container" class="earth-container"></div>
+        <div id="map-status" class="map-status" role="status" aria-live="polite">
+            <span class="map-status-pulse"></span>
+            <span id="map-status-text">PREPARO LA MAPPA</span>
+        </div>
+        <div class="map-credit" aria-label="Attribuzione mappa">OpenFreeMap © OpenMapTiles · Dati © OpenStreetMap</div>
         
         <!-- Salerno Showcase Content (The Mini-Site) -->
         <div id="salerno-content" class="salerno-content" data-lenis-prevent="true">
-            <button id="close-salerno" class="close-salerno">
-                <span class="t-char">&lt;</span> BACK
-            </button>
-            
             <div class="salerno-scroller">
                 <!-- HERO SECTION -->
                 <div class="s-hero">
-                    <img src="images/salerno-bg.jpg" class="s-hero-bg" alt="Salerno Coast">
+                    <img src="images/salerno-bg.jpg" class="s-hero-bg" alt="Salerno Coast" loading="lazy" decoding="async">
                     <div class="s-hero-overlay"></div>
                     <div class="s-hero-text">
                         <h1 class="s-huge-title">SALERNO</h1>
@@ -395,10 +360,10 @@
                         </div>
                         <div class="s-img-col s-interactive-gallery">
                             <div class="s-img-wrap s-img-1">
-                                <img src="https://images.unsplash.com/photo-1572085313466-6710de8d7ba3?auto=format&fit=crop&w=800&q=80" alt="Amalfi Coast View">
+                                <img src="https://images.unsplash.com/photo-1572085313466-6710de8d7ba3?auto=format&fit=crop&w=800&q=80" alt="Amalfi Coast View" loading="lazy" decoding="async">
                             </div>
                             <div class="s-img-wrap s-img-2">
-                                <img src="https://images.unsplash.com/photo-1552083974-186346191183?auto=format&fit=crop&w=800&q=80" alt="Italian Streets">
+                                <img src="https://images.unsplash.com/photo-1552083974-186346191183?auto=format&fit=crop&w=800&q=80" alt="Italian Streets" loading="lazy" decoding="async">
                             </div>
                         </div>
                     </div>
@@ -426,7 +391,7 @@
                             </ul>
                         </div>
                         <div class="s-img-col s-tech-visual">
-                            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1000&q=80" alt="Code & Development">
+                            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1000&q=80" alt="Code & Development" loading="lazy" decoding="async">
                             <div class="s-tech-glow"></div>
                         </div>
                     </div>
@@ -436,7 +401,6 @@
     </div>
 
     <!-- SCRIPTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/split-type"></script>
