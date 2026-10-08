@@ -810,7 +810,8 @@ body.loading {
 @media (max-width: 480px) {
     .container { padding-right: 5vw; padding-left: 5vw; }
     .hero { padding-right: 5vw; padding-left: 5vw; }
-    .hero-title { font-size: clamp(3rem, 11.5vw, 4.6rem); }
+    .hero-title { width: fit-content; max-width: 100%; font-size: clamp(2.2rem, 11vw, 4.6rem); }
+    .hero-title .line-mask { max-width: 100%; }
     .detail-item { font-size: 12px; }
     .location-group { flex-direction: column; align-items: flex-start; }
     .map-open-trigger { min-height: 40px; }
@@ -831,7 +832,7 @@ body.loading {
 
 @media (max-width: 360px) {
     .terminal-prompt { font-size: 9px; }
-    .hero-title { font-size: 2.8rem; }
+    .hero-title { font-size: clamp(2.1rem, 11.5vw, 2.8rem); }
     .p-top { gap: 0.5rem; }
     .p-top h2 { font-size: 1.75rem; }
     .cv-cover-title { font-size: 2.05rem; }
